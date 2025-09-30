@@ -1,16 +1,22 @@
 "use client"
+import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from 'next/navigation'
 
 import { SidePanel } from "@/components/SidePanel";
 
-import { z } from "zod";
+import { set, z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
 import { UserRound, AtSign, LockKeyhole } from "lucide-react"
 import { Button } from "@/components/ui/button";
+
+import api from "@/lib/api";
+import { Spin } from "@/components/Spin";
 
 const registerSchema = z.object({
   fullName: z.string().refine((name) => !!name, {
@@ -28,9 +34,14 @@ const registerSchema = z.object({
   confirmPassword: z.string().refine((password) => !!password, {
     message: "A confirmação de senha é obrigatória.", 
   })
+}).refine((password) => password.password === password.confirmPassword, {
+  message: "As senhas não coincidem.",
+  path: ["confirmPassword"]
 })
 
 export default function Register() {
+    const router = useRouter();
+
     const form = useForm<z.infer<typeof registerSchema>>({
         resolver: zodResolver(registerSchema),
         defaultValues: {
@@ -41,8 +52,32 @@ export default function Register() {
         }
     })
 
-    function onSubmit(data: z.infer<typeof registerSchema>) {
-        console.log(data)
+    const [loading, setLoading] = useState(false);
+
+    const onSubmit = async(data: z.infer<typeof registerSchema>) => {
+        setLoading(true);
+
+        try {
+            await api.post("/auth/register", {
+                name: data.fullName,
+                email: data.email,
+                password: data.password,
+                confirmedPassword: data.confirmPassword
+            })
+
+            toast.success('Usuário criado com sucesso!')
+
+            setTimeout(() => {    
+                router.push("/login");
+            }, 3500);
+
+        } catch (error) {
+            toast.error('Erro ao criar usuário!')
+            console.log(error)
+            
+        } finally {
+            setLoading(false);
+        }
     }
 
     return (
@@ -87,7 +122,7 @@ export default function Register() {
                                 <FormItem>
                                     <FormLabel>Senha</FormLabel>
                                     <FormControl>
-                                        <Input icon={LockKeyhole} placeholder="Crie uma senha" id="password" type="text" {...field} />
+                                        <Input icon={LockKeyhole} placeholder="Crie uma senha" id="password" type="password" {...field} />
                                     </FormControl>
                                 </FormItem>
                             )}
@@ -100,7 +135,7 @@ export default function Register() {
                                 <FormItem>
                                     <FormLabel>Confirmar senha</FormLabel>
                                     <FormControl>
-                                        <Input icon={LockKeyhole} placeholder="Confirme sua senha" id="confirmPassword" type="text" {...field} />
+                                        <Input icon={LockKeyhole} placeholder="Confirme sua senha" id="confirmPassword" type="password" {...field} />
                                     </FormControl>
                                 </FormItem>
                             )}
@@ -109,7 +144,7 @@ export default function Register() {
 
                         <p className="text-dark-gray font-light text-[1rem] self-end max-lg:text-[0.75rem]">Já tem uma conta? <Link href="/login" className="text-link underline hover:opacity-80">Faça login</Link></p>
 
-                        <Button>Criar conta</Button>
+                        <Button disabled={loading}>{loading ? <Spin /> : "Criar conta"}</Button>
                     </div>
                 </form>
             </Form>
