@@ -3,7 +3,7 @@ import { SidePanel } from "@/components/SidePanel";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { AtSign, LockKeyhole } from "lucide-react"
 
-import { set, z } from "zod";
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
@@ -40,6 +40,7 @@ export default function Login() {
     
     const onSubmit = async (data: z.infer<typeof loginSchema>) =>{
         setLoading(true);
+        console.log(data.password)
 
         try {
             const response = await api.post("/auth/login", {
@@ -55,7 +56,7 @@ export default function Login() {
             }, 3500);
 
         } catch (error) {
-            console.log("deu erro")
+            toast.error('Erro ao logar usuário!')
             console.log(error)
 
         } finally {

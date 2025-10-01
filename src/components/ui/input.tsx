@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils"
 import Image from "next/image"
 
 interface InputProps extends React.ComponentProps<"input"> {
-  icon: LucideIcon
+  icon?: LucideIcon
 }
 
 function Input({ icon: Icon, className, type, ...props }: InputProps) {
