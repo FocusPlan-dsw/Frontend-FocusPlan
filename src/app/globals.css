@@ -135,13 +135,8 @@ body {
 }
 
 @layer utilities {
+  
   .bg-gradient {
-    background: linear-gradient(
-      to bottom,
-      #10B981,
-      #06B6D4,
-      #4989E5,
-      #4F46E5
-    );
+    background: linear-gradient(162.54deg, #10B981 0%, #06B6D4 45.77%, #4989E5 68.66%, #4F46E5 91.55%);
   }
 }
