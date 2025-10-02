@@ -40,7 +40,6 @@ export default function Login() {
     
     const onSubmit = async (data: z.infer<typeof loginSchema>) =>{
         setLoading(true);
-        console.log(data.password)
 
         try {
             const response = await api.post("/auth/login", {
@@ -53,7 +52,7 @@ export default function Login() {
 
             setTimeout(() => {    
                 router.push("/home");
-            }, 3500);
+            }, 2000);
 
         } catch (error) {
             toast.error('Erro ao logar usuário!')

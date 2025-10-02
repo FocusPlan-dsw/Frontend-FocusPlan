@@ -19,6 +19,8 @@ export function EnterCode( { email, onCodeVerified, onCodeEntered }: EnterCodePr
     const [code, setCode] = useState('');
 
     const handleVerifyCode = async (code: string) => {
+        setLoading(true);
+        
         try {
             const res = await api.post("/auth/verify-code", {
                 code
@@ -32,20 +34,20 @@ export function EnterCode( { email, onCodeVerified, onCodeEntered }: EnterCodePr
 
         } catch (error) {
             toast.error("Código inválido")
+        } finally {
+            setLoading(false);
         }
     }
 
     const resendCode = async (email: string) => {
-        setLoading(true);
         try {
-            const res = await api.post("/api/auth/forgot-password", {
+            const res = await api.post("/auth/forgot-password", {
                 email
             })
 
             if (res.status === 200) {
                 toast.success("Código reenviado com sucesso!")
-                
-                onCodeVerified();
+                setCode('');
 
             } else {
                 toast.error("Código inválido")
@@ -54,8 +56,6 @@ export function EnterCode( { email, onCodeVerified, onCodeEntered }: EnterCodePr
         } catch (error) {
             toast.error("Erro inesperado")
 
-        } finally {
-            setLoading(false);
         } 
     }
 

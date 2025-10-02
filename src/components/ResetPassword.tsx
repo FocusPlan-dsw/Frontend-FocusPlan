@@ -1,5 +1,5 @@
 "use client"
-import { set, z } from "zod";
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { SidePanel } from "@/components/SidePanel";
@@ -49,7 +49,7 @@ export default function ResetPassword({ code }: ResetPasswordProps) {
                 
                 setTimeout(() => {    
                     router.push("/login");
-                }, 3500);
+                }, 2000);
             }
 
 

@@ -10,7 +10,6 @@ import { Button } from "@/components/ui/button";
 import api from "@/lib/api";
 import { toast } from "react-toastify";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Spin } from "@/components/Spin";
 
 const forgotPasswordSchema = z.object({
@@ -21,11 +20,10 @@ const forgotPasswordSchema = z.object({
 
 interface ForgotProps {
     onCodeVerified: () => void;
+    setEmail: (email: string) => void
 }
 
-export default function Forgot({ onCodeVerified }: ForgotProps) {
-    const router = useRouter();
-
+export default function Forgot({ onCodeVerified, setEmail }: ForgotProps) {
     const form = useForm<z.infer<typeof forgotPasswordSchema>>({
         resolver: zodResolver(forgotPasswordSchema),
         defaultValues: {
@@ -45,6 +43,7 @@ export default function Forgot({ onCodeVerified }: ForgotProps) {
 
             toast.success('Email enviado com sucesso!')
             onCodeVerified();
+            setEmail(data.email);
        
         } catch (error) {
             toast.error('Erro ao enviar email!')
@@ -53,8 +52,6 @@ export default function Forgot({ onCodeVerified }: ForgotProps) {
             setLoading(false);
         }
     }
-
- 
 
     return (
         <section className="w-full flex max-xl:flex-col">

@@ -69,7 +69,7 @@ export default function Register() {
 
             setTimeout(() => {    
                 router.push("/login");
-            }, 3500);
+            }, 2000);
 
         } catch (error) {
             toast.error('Erro ao criar usuário!')
@@ -85,10 +85,10 @@ export default function Register() {
             <SidePanel />
 
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col w-full justify-center items-center gap-[6.25rem] max-lg:p-5">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col w-full justify-center items-center gap-[4rem] max-lg:p-5">
                     <h1 className="font-bold text-[2.5rem] text-primary max-lg:text-[1.5rem]">Criar uma conta</h1>
 
-                    <div className="w-full flex flex-col gap-[3.125rem] max-w-[531px]">
+                    <div className="w-full flex flex-col gap-[2rem] max-w-[531px]">
                         <FormField
                             control={form.control}
                             name="fullName"
