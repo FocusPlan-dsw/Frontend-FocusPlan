@@ -18,11 +18,12 @@ function Input({ icon: Icon, className, type, ...props }: InputProps) {
         type={type}
         data-slot="input"
         className={cn(
-          "file:text-foreground placeholder:text-gray02 dark:bg-input/30 border border-gray02 h-[2.7rem] w-full min-w-0 rounded-md bg-transparent py-1 text-base pl-9 transition-color outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+          "file:text-foreground placeholder:text-gray02 dark:bg-input/30 border border-gray02 h-[3rem] w-full min-w-0 rounded-md bg-transparent py-1 text-base pl-9 transition-color outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+          "focus-visible:border-primary",
           className
         )}
         {...props}
-    />
+      />
     </div>
   )
 }
