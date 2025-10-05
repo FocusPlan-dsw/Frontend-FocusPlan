@@ -16,9 +16,13 @@ body {
 @theme {
   --color-primary: #4F46E5;
   --color-dark-gray: #1E293B;
+  --color-gray01: #F5F5F5;
   --color-gray02: #9C9C9C;
+  --color-gray03: #C5C4C4;
+  --color-gray04: #E4E4E7;
   --color-light-gray: #F3F3F3;
   --color-link: #0000FF;
+  --color-date: #09090B;
 
 
   --color-background: var(--background);
