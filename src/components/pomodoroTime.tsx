@@ -3,13 +3,19 @@
 import { useTimer } from 'react-timer-hook';
 import { TimerDisplay } from './TimerDisplay';
 
+const POMODORO_DURATION_SECONDS = 25 * 60;
+
 const getExpiryTimestamp = () => {
     const time = new Date();
-    time.setSeconds(time.getSeconds() + 25 * 60);
+    time.setSeconds(time.getSeconds() + POMODORO_DURATION_SECONDS);
     return time;
 };
 
-export function PomodoroTimer() {
+interface PomodoroTimerProps {
+    onTimeSubmit: (elapsedSeconds: number) => void;
+}
+
+export function PomodoroTimer({ onTimeSubmit }: PomodoroTimerProps) {
     const {
         seconds,
         minutes,
@@ -20,9 +26,16 @@ export function PomodoroTimer() {
         restart,
     } = useTimer({ expiryTimestamp: getExpiryTimestamp(), autoStart: false });
 
-    const isPaused = !isRunning && (minutes * 60 + seconds) < (25 * 60);
+    const isPaused = !isRunning && (minutes * 60 + seconds) < POMODORO_DURATION_SECONDS;
 
     const handleReset = () => {
+        const remainingSeconds = (minutes * 60) + seconds;
+        const elapsedSeconds = POMODORO_DURATION_SECONDS - remainingSeconds;
+        
+        if (elapsedSeconds > 0) {
+            onTimeSubmit(Math.round(elapsedSeconds));
+        }
+
         restart(getExpiryTimestamp(), false);
     };
 

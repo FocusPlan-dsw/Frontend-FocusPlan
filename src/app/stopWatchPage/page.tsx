@@ -13,12 +13,31 @@ import { TimePicker } from "@/components/time-picker";
 
 type TimerMode = 'stopwatch' | 'pomodoro';
 
+function formatDedicatedTime(totalSeconds: number): string {
+    if (totalSeconds === 0) return "";
+    
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    const parts = [];
+    if (hours > 0) parts.push(`${hours}h`);
+    if (minutes > 0) parts.push(`${minutes}m`);
+    if (seconds > 0 && hours === 0 && minutes === 0) parts.push(`${seconds}s`); 
+
+    return ` - ${parts.join(' ')}`;
+}
+
 export default function StopWatchPage() {
     const [timerMode, setTimerMode] = useState<TimerMode>('stopwatch');
-    
     const [selectedModeInDialog, setSelectedModeInDialog] = useState<TimerMode>(timerMode);
-    
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    
+    const [dedicatedTime, setDedicatedTime] = useState(0);
+
+    const handleTimeSubmit = (elapsedSeconds: number) => {
+        setDedicatedTime(prevTime => prevTime + elapsedSeconds);
+    };
 
     const handleSaveChanges = () => {
         setTimerMode(selectedModeInDialog);
@@ -28,19 +47,30 @@ export default function StopWatchPage() {
     return (
         <section className="w-full min-h-screen flex flex-col justify-center items-center p-4 bg-gradient-transparent">
             <div className="flex flex-col w-full items-center gap-10 max-lg:gap-8 max-w-3xl">
-                <div className="w-full flex flex-col items-center gap-6 md:gap-15">
+                <div className="w-full flex flex-col items-center gap-12 sm:gap-8 md:gap-12">
                     <img src="/white-logo.svg" alt="logo branca" className="w-48 md:w-64" />
-                    <div className="flex items-center w-full max-w-md py-3 px-4 border border-[#9C9C9C] rounded-[9px] bg-[#F5F5F5] gap-4">
-                        <Logs className="flex-shrink-0 h-4 w-4" />
-                        <p className="truncate text-sm">Iniciar implementação de telas</p>
+                    
+                    <div className="flex items-center w-full max-w-md py-3 px-4 border border-[#9C9C9C] rounded-[9px] bg-[#F5F5F5] gap-3">
+                        <Logs className="flex-shrink-0 h-4 w-4 text-gray-600" />
+                        <p className="truncate text-sm">
+                            Iniciar implementação de telas
+                            <span className="font-normal text-gray-600">
+                                {formatDedicatedTime(dedicatedTime)}
+                            </span>
+                        </p>
                     </div>
                 </div>
 
                 <div className="flex flex-col items-center gap-8 md:gap-12 w-full">
-                    {timerMode === 'stopwatch' ? <Chronometer /> : <PomodoroTimer />}
-                        <div className="flex flex-col sm:flex-col md:flex-row items-center justify-center gap-4 w-full w-full max-w-md sm:max-w-none">                        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                    {timerMode === 'stopwatch' 
+                        ? <Chronometer onTimeSubmit={handleTimeSubmit} /> 
+                        : <PomodoroTimer onTimeSubmit={handleTimeSubmit} />
+                    }
+                    
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full max-w-xs sm:max-w-lg">
+                        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                             <DialogTrigger asChild>
-                                <Button variant="outline" className="flex-1 min-w-[160px] bg-white text-gray-800 hover:bg-gray-100 shadow-sm">
+                                <Button variant="outline" className="w-full sm:flex-1 bg-white text-gray-800 hover:bg-gray-100 shadow-sm">
                                     <Hourglass className="mr-2 h-4 w-4" />
                                     Modo do Timer
                                 </Button>
@@ -71,10 +101,11 @@ export default function StopWatchPage() {
                                 </DialogFooter>
                             </DialogContent>
                         </Dialog>
+
                         <Dialog>
                             <DialogTrigger asChild>
-                                <Button variant="outline" className="flex-1 min-w-[160px] bg-white text-gray-800 hover:bg-gray-100 shadow-sm">
-                                    <Timer className="mr-2" />
+                                <Button variant="outline" className="w-full sm:flex-1 bg-white text-gray-800 hover:bg-gray-100 shadow-sm">
+                                    <Timer className="mr-2 h-4 w-4" />
                                     Pomodoro
                                 </Button>
                             </DialogTrigger>
@@ -94,7 +125,8 @@ export default function StopWatchPage() {
                                 </DialogFooter>
                             </DialogContent>
                         </Dialog>
-                        <Button asChild variant="outline" className="flex-1 min-w-[160px] bg-white text-gray-800 hover:bg-gray-100 shadow-sm">
+
+                        <Button asChild variant="outline" className="w-full sm:flex-1 bg-white text-gray-800 hover:bg-gray-100 shadow-sm">
                             <Link href="/">
                                 <ClipboardList className="mr-2 h-4 w-4" />
                                 Tarefas
