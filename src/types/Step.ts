@@ -1,1 +1,1 @@
-export type Step = "today" | "tomorrow" | "week" | "all" | "completed" | "late" | "reports" | "logout";
+export type Step = "today" | "tomorrow" | "week" | "all" | "completed" | "overdue" | "reports" | "logout";

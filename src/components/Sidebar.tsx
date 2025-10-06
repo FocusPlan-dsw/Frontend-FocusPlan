@@ -24,7 +24,7 @@ export function Sidebar() {
             name: "Tarefas concluídas", icon: BookCheck, step: "completed"
         },
         {
-            name: "Tarefas atrasadas", icon: TriangleAlert, step: "late"
+            name: "Tarefas atrasadas", icon: TriangleAlert, step: "overdue"
         },
         {
             name: "Relatórios", icon: ClipboardClock, step: "reports"
