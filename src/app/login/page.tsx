@@ -51,7 +51,7 @@ export default function Login() {
             toast.success('Usuário logado com sucesso!')
 
             setTimeout(() => {    
-                router.push("/home");
+                router.push("/tasks");
             }, 2000);
 
         } catch (error) {

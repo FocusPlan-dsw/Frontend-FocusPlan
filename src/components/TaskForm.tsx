@@ -91,7 +91,7 @@ export function TaskForm({ defaultValues, onSubmit }: TaskFormProps) {
                                     <FormItem>
                                         <FormLabel className="text-[14px] font-medium">Título</FormLabel>
                                         <FormControl>
-                                            <Input {...form.register("title")} placeholder="Digite um título para a tarefa" id="title" type="text" className="border-gray04 rounded-[6px]" {...field} />
+                                            <Input placeholder="Digite um título para a tarefa" id="title" type="text" className="border-gray04 rounded-[6px]" {...field} />
                                         </FormControl>
                                     </FormItem>
                                 )}
@@ -107,7 +107,6 @@ export function TaskForm({ defaultValues, onSubmit }: TaskFormProps) {
                                             <textarea
                                                 data-slot="textarea"
                                                 placeholder="Descreva a atividade"
-                                                {...form.register("description")}
                                                 className={cn(
                                                     "placeholder:text-gray02 dark:bg-input/30 border border-gray04 w-full min-w-0 rounded-[6px] bg-transparent py-2 px-3 text-base transition-color outline-none resize-none h-[6rem] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                                                 )}
@@ -169,8 +168,7 @@ export function TaskForm({ defaultValues, onSubmit }: TaskFormProps) {
                                                         <PopoverContent className="w-auto p-0">
                                                             <Calendar mode="single" selected={field.value} onSelect={(date) => {
                                                                 const startDate = form.getValues("startDate");
-                                                                console.log(startDate)
-
+                                                         
                                                                 if (startDate && date && date < startDate) {
                                                                     const newDate = new Date(startDate);
                                                                     newDate.setDate(newDate.getDate() + 1);
@@ -207,7 +205,7 @@ export function TaskForm({ defaultValues, onSubmit }: TaskFormProps) {
                                         <FormItem>
                                             <FormLabel className="text-[14px] font-medium">Tempo estimado</FormLabel>
                                             <FormControl>
-                                                <Input {...form.register("estimatedTime")} placeholder="Tempo estimado para tarefa" id="estimatedTime" type="text" className="border-gray04 rounded-[6px]" {...field} {...form.register("estimatedTime", { 
+                                                <Input placeholder="Tempo estimado para tarefa" id="estimatedTime" type="text" className="border-gray04 rounded-[6px]" {...form.register("estimatedTime", { 
                                                     onChange: (e) => {
                                                         const masked = maskEstimatedTime(e.target.value)
                                                         form.setValue("estimatedTime", masked)
@@ -220,7 +218,7 @@ export function TaskForm({ defaultValues, onSubmit }: TaskFormProps) {
                                 }}
                             />
 
-                            <Button size="sm">Criar</Button>
+                            <Button size="sm">{defaultValues ? "Salvar" : "Criar"}</Button>
                         </div>
                     </form>
                 </Form>

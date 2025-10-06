@@ -2,14 +2,11 @@ import Image from "next/image";
 
 import { CalendarCheck2, CalendarRange, Target, BookCheck, TriangleAlert, ClipboardClock, LogOut } from "lucide-react";
 import React from "react";
-import { Step } from "@/types/Step";
+import { useStep } from "@/context/StepContext";
 
-interface SidebarProps {
-    step: string;
-    setStep: React.Dispatch<React.SetStateAction<Step>>;
-}
+export function Sidebar() {
+    const {  step, setStep } = useStep();
 
-export function Sidebar({ step, setStep }: SidebarProps) {
     const buttons = [
         {
             name: "Hoje", icon: CalendarCheck2, step: "today"

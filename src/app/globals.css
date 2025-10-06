@@ -23,6 +23,8 @@ body {
   --color-light-gray: #F3F3F3;
   --color-link: #0000FF;
   --color-date: #09090B;
+  --color-green-sucess: #D1F4E0;
+  --color-green-text: #0D7D42;
 
 
   --color-background: var(--background);

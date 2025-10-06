@@ -3,8 +3,17 @@ import { Input } from "./ui/input"
 import { TaskBlock } from "./TaskBlock"
 import { Task } from "./Task"
 import { TaskForm } from "./TaskForm"
+import { useRouter } from "next/navigation"
 
 export function TodayTask() {
+    const tasks = [
+        {id: 1, title: "Iniciar implementação de telas"},
+        {id: 2, title: "Implementar login"},
+        {id: 3, title: "Atividade de IHC"},
+    ]
+
+    const router = useRouter();
+
     return (
         <section className="w-full flex flex-col gap-20">
             <h1 className="text-3xl text-primary">Tarefas de hoje</h1>
@@ -23,9 +32,9 @@ export function TodayTask() {
             </div>
 
             <div className="flex flex-col gap-12">
-                <Task title="Iniciar implementação de telas" />
-                <Task title="Implementar login" />
-                <Task title="Atividade de IHC" />
+                {tasks.map((task) => (
+                    <Task key={task.id} title={task.title} onClick={() => router.push(`/tasks/${task.id}`)} />
+                ))}
             </div>
         </section>    
     )
