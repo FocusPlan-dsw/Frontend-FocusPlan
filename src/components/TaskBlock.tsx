@@ -1,6 +1,6 @@
 interface TaskBlockProps {
     title: string;
-    value: string;
+    value: string | number;
 }
 
 export function TaskBlock({ title, value }: TaskBlockProps) {

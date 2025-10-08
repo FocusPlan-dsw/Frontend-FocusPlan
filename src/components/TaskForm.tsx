@@ -21,6 +21,10 @@ import {
 } from "@/components/ui/popover"
 import { format } from "date-fns"
 import { cn } from "@/lib/utils"
+import api from "@/lib/api"
+import { toast } from "react-toastify"
+import { useState } from "react"
+import { TaskP } from "@/types/Task"
 
 
 const createTaskSchema = z.object({
@@ -39,10 +43,10 @@ const createTaskSchema = z.object({
 
 interface TaskFormProps {
   defaultValues?: z.infer<typeof createTaskSchema>
-  onSubmit: (data: z.infer<typeof createTaskSchema>) => void
+  getTasks?: () => void
 }
 
-export function TaskForm({ defaultValues, onSubmit }: TaskFormProps) {
+export function TaskForm({ defaultValues, getTasks }: TaskFormProps) {
       const form = useForm<z.infer<typeof createTaskSchema>>({
         resolver: zodResolver(createTaskSchema),
         defaultValues: defaultValues ?? {
@@ -53,6 +57,8 @@ export function TaskForm({ defaultValues, onSubmit }: TaskFormProps) {
             estimatedTime: ""
         }
     })
+
+    const [open, setOpen] = useState(false);
 
     const maskEstimatedTime = (value: string) => {
         let v = value.replace(/\D/g, "")
@@ -65,8 +71,33 @@ export function TaskForm({ defaultValues, onSubmit }: TaskFormProps) {
         return v
     }   
 
+    const convertEstimatedTimeToMinutes = (time: string) => {
+        const [hours, minutes] = time.split(":").map(Number);
+        return (hours * 60) + minutes;
+    }
+
+
+    const createTask = async (data: TaskP) => {
+        try {
+            await api.post("/tasks", {
+                title: data.title,
+                description: data.description ?? "Sem descrição",
+                startDate: data.startDate ?? new Date(),
+                dueDate: data.dueDate ?? new Date(), 
+                estimatedTime: convertEstimatedTimeToMinutes(data.estimatedTime ?? "00:00"),
+            })
+            setOpen(false);
+            toast.success('Tarefa criada com sucesso!')
+            getTasks && getTasks();
+
+        } catch (error) {
+            console.log(error)
+            toast.error('Erro ao criar tarefa!')
+        }
+    }
+
     return (
-        <Sheet>
+        <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
                 {
                     defaultValues ? (
@@ -82,7 +113,7 @@ export function TaskForm({ defaultValues, onSubmit }: TaskFormProps) {
                 </SheetHeader>
 
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="px-5">
+                    <form onSubmit={form.handleSubmit(createTask)} className="px-5">
                         <div className="w-full flex flex-col gap-[2rem]">
                             <FormField
                                 control={form.control}
@@ -217,7 +248,7 @@ export function TaskForm({ defaultValues, onSubmit }: TaskFormProps) {
                                     )
                                 }}
                             />
-
+                            
                             <Button size="sm">{defaultValues ? "Salvar" : "Criar"}</Button>
                         </div>
                     </form>
