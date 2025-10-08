@@ -1,24 +1,18 @@
 import { Button } from './ui/button';
-import { 
-    Dialog, 
-    DialogContent, 
-    DialogDescription, 
-    DialogFooter, 
-    DialogHeader, 
-    DialogTitle, 
-    DialogTrigger,
-    DialogClose
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog";
 
 interface TimerDisplayProps {
     minutes: number;
     seconds: number;
     isRunning: boolean;
     isPaused: boolean;
+    pomodoroState?: 'idle' | 'focusing' | 'break' | 'focus_ended';
     onStart: () => void;
     onPause: () => void;
     onResume: () => void;
     onReset: () => void;
+    onStartBreak?: () => void;
+    onSkipBreak?: () => void;
 }
 
 export function TimerDisplay({
@@ -26,13 +20,104 @@ export function TimerDisplay({
     seconds,
     isRunning,
     isPaused,
+    pomodoroState,
     onStart,
     onPause,
     onResume,
     onReset,
+    onStartBreak,
+    onSkipBreak,
 }: TimerDisplayProps) {
     const formattedMinutes = minutes.toString().padStart(2, '0');
     const formattedSeconds = seconds.toString().padStart(2, '0');
+
+    const renderButtons = () => {
+        if (pomodoroState) {
+            switch (pomodoroState) {
+                case 'focus_ended':
+                    return (
+                        <>
+                            <Button onClick={onStartBreak} className="flex-1 py-6 text-lg">Iniciar Pausa</Button>
+                            <Button onClick={onSkipBreak} className="flex-1 py-6 text-lg">Pular Pausa</Button>
+                        </>
+                    );
+                case 'focusing':
+                case 'break':
+                    if (isRunning) {
+                        return <Button onClick={onPause} className="flex-1 py-6 text-lg">Pausar</Button>;
+                    }
+                    if (isPaused) {
+                        return (
+                            <>
+                                <Button onClick={onResume} className="flex-1 py-6 text-lg">Continuar</Button>
+                                <Dialog>
+                                    <DialogTrigger asChild>
+                                        <Button className="flex-1 py-6 text-lg">Reiniciar</Button>
+                                    </DialogTrigger>
+                                    <DialogContent>
+                                        <DialogHeader>
+                                            <DialogTitle>Você tem certeza que quer reiniciar?</DialogTitle>
+                                            <DialogDescription>
+                                                Esta ação irá salvar o tempo de foco já percorrido e reiniciar o ciclo.
+                                            </DialogDescription>
+                                        </DialogHeader>
+                                        <DialogFooter className="flex-col-reverse gap-2 pt-2 sm:flex-row sm:gap-5">
+                                            <DialogClose asChild>
+                                                <Button type="button" variant="outline" className="w-full sm:w-auto text-sm">
+                                                    Cancelar
+                                                </Button>
+                                            </DialogClose>
+                                            <Button type="button" onClick={onReset} className="w-full sm:w-auto text-sm">
+                                                Confirmar
+                                            </Button>
+                                        </DialogFooter>
+                                    </DialogContent>
+                                </Dialog>
+                            </>
+                        );
+                    }
+                    return null;
+                case 'idle':
+                default:
+                    return <Button onClick={onStart} className="flex-1 py-6 text-lg">Começar Foco</Button>;
+            }
+        }
+
+        if (isRunning) {
+            return <Button onClick={onPause} className="flex-1 py-6 text-lg">Pausar</Button>;
+        }
+        if (isPaused) {
+            return (
+                 <>
+                    <Button onClick={onResume} className="flex-1 py-6 text-lg">Continuar</Button>
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button className="flex-1 py-6 text-lg">Reiniciar</Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle>Você tem certeza?</DialogTitle>
+                                <DialogDescription>
+                                    Esta ação irá zerar o cronômetro e registrar o tempo que você parou.
+                                </DialogDescription>
+                            </DialogHeader>
+                            <DialogFooter className="flex-col-reverse gap-2 pt-2 sm:flex-row sm:gap-5">
+                                <DialogClose asChild>
+                                    <Button type="button" variant="outline" className="w-full sm:w-auto text-sm">
+                                        Cancelar
+                                    </Button>
+                                </DialogClose>
+                                <Button type="button" onClick={onReset} className="w-full sm:w-auto text-sm">
+                                    Confirmar
+                                </Button>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
+                </>
+            );
+        }
+        return <Button onClick={onStart} className="flex-1 py-6 text-lg">Começar</Button>;
+    };
 
     return (
         <div className="flex flex-col items-center gap-8 w-full max-w-lg mx-auto">
@@ -41,50 +126,8 @@ export function TimerDisplay({
                     <span>{formattedMinutes}</span>:<span>{formattedSeconds}</span>
                 </p>
             </div>
-
             <div className="flex flex-col sm:flex-row gap-4 w-full">
-                {isRunning && (
-                    <Button onClick={onPause} className="flex-1 py-6 text-lg">Pausar</Button>
-                )}
-
-                {isPaused && (
-                    <>
-                        <Button onClick={onResume} className="flex-1 py-6 text-lg">Continuar</Button>
-                        
-                        <Dialog>
-                            <DialogTrigger asChild>
-                                <Button className="flex-1 py-6 text-lg">Reiniciar</Button>
-                            </DialogTrigger>
-                            <DialogContent>
-                                <DialogHeader>
-                                    <DialogTitle>Você tem certeza?</DialogTitle>
-                                    <DialogDescription>
-                                        Esta ação irá zerar o cronômetro e registrar o tempo que você parou.
-                                    </DialogDescription>
-                                </DialogHeader>
-
-                                <DialogFooter className="flex-col-reverse gap-2 pt-2 sm:flex-row sm:gap-5">
-                                    <DialogClose asChild>
-                                        <Button type="button" variant="outline" className="w-full sm:w-auto text-sm">
-                                            Cancelar
-                                        </Button>
-                                    </DialogClose>
-                                    <Button 
-                                        type="button" 
-                                        onClick={onReset}
-                                        className="w-full sm:w-auto text-sm"
-                                    >
-                                        Confirmar
-                                    </Button>
-                                </DialogFooter>
-                            </DialogContent>
-                        </Dialog>
-                    </>
-                )}
-                
-                {!isRunning && !isPaused && (
-                    <Button onClick={onStart} className="flex-1 py-6 text-lg">Começar</Button>
-                )}
+                {renderButtons()}
             </div>
         </div>
     );

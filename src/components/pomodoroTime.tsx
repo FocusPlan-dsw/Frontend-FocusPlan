@@ -3,40 +3,68 @@
 import { useTimer } from 'react-timer-hook';
 import { TimerDisplay } from './TimerDisplay';
 
-const POMODORO_DURATION_SECONDS = 25 * 60;
+type PomodoroState = 'idle' | 'focusing' | 'break' | 'focus_ended';
 
-const getExpiryTimestamp = () => {
+interface PomodoroTimerProps {
+    pomodoroState: PomodoroState;
+    focusDuration: number;
+    breakDuration: number;
+    onTimeSubmit: (elapsedSeconds: number) => void;
+    onExpire: () => void;
+    onStartFocus: () => void;
+    onStartBreak: () => void;
+    onSkipBreak: () => void;
+}
+
+const getExpiryTimestamp = (duration: number) => {
     const time = new Date();
-    time.setSeconds(time.getSeconds() + POMODORO_DURATION_SECONDS);
+    time.setSeconds(time.getSeconds() + duration);
     return time;
 };
 
-interface PomodoroTimerProps {
-    onTimeSubmit: (elapsedSeconds: number) => void;
-}
+export function PomodoroTimer({ 
+    pomodoroState,
+    focusDuration,
+    breakDuration,
+    onTimeSubmit, 
+    onExpire,
+    onStartFocus,
+    onStartBreak,
+    onSkipBreak
+}: PomodoroTimerProps) {
+    
+    const duration = pomodoroState === 'break' ? breakDuration : focusDuration;
 
-export function PomodoroTimer({ onTimeSubmit }: PomodoroTimerProps) {
     const {
         seconds,
         minutes,
         isRunning,
-        start,
         pause,
         resume,
-        restart,
-    } = useTimer({ expiryTimestamp: getExpiryTimestamp(), autoStart: false });
+    } = useTimer({ 
+        expiryTimestamp: getExpiryTimestamp(duration), 
+        autoStart: pomodoroState === 'focusing' || pomodoroState === 'break',
+        onExpire: () => {
+            if (pomodoroState === 'focusing') {
+                onTimeSubmit(duration);
+            }
+            onExpire();
+        }
+    });
 
-    const isPaused = !isRunning && (minutes * 60 + seconds) < POMODORO_DURATION_SECONDS;
+    const isPaused = !isRunning && (pomodoroState === 'focusing' || pomodoroState === 'break');
 
     const handleReset = () => {
-        const remainingSeconds = (minutes * 60) + seconds;
-        const elapsedSeconds = POMODORO_DURATION_SECONDS - remainingSeconds;
-        
-        if (elapsedSeconds > 0) {
-            onTimeSubmit(Math.round(elapsedSeconds));
+        if (pomodoroState === 'focusing') {
+            const remainingSeconds = (minutes * 60) + seconds;
+            const elapsedSeconds = duration - remainingSeconds;
+            
+            if (elapsedSeconds > 0) {
+                onTimeSubmit(Math.round(elapsedSeconds));
+            }
         }
 
-        restart(getExpiryTimestamp(), false);
+        onSkipBreak(); 
     };
 
     return (
@@ -45,10 +73,13 @@ export function PomodoroTimer({ onTimeSubmit }: PomodoroTimerProps) {
             seconds={seconds}
             isRunning={isRunning}
             isPaused={isPaused}
-            onStart={start}
+            pomodoroState={pomodoroState}
+            onStart={onStartFocus}
             onPause={pause}
             onResume={resume}
             onReset={handleReset}
+            onStartBreak={onStartBreak}
+            onSkipBreak={onSkipBreak}
         />
     );
 }
