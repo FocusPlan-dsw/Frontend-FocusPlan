@@ -1,12 +1,30 @@
+import { useParams } from "next/navigation";
 import { Button } from "./ui/button";
 
 import { X, Trash2 } from "lucide-react";
+import api from "@/lib/api";
+import { toast } from "react-toastify";
 
 interface DeleteModalProps {
+    id: string;
+    getTasks?: () => void
     setOpenModalCancel: (value: boolean) => void
 }
 
-export function DeleteModal({ setOpenModalCancel }: DeleteModalProps) {
+export function DeleteModal({ id, getTasks, setOpenModalCancel }: DeleteModalProps) {
+    const deleteTask = async (id: string) => {
+        try {
+            await api.delete(`/tasks/${id}`);
+            setOpenModalCancel(false);
+            toast.success("Tarefa deletada com sucesso!");
+
+            getTasks && getTasks();
+
+        } catch (error) {
+            toast.error("Erro ao deletar tarefa");
+        }
+    }
+
     return (
         <div className="fixed inset-0 top-0 left-0 w-full z-50 bg-black/75 flex items-center justify-center">
             <div className="w-full max-w-[363px] bg-white px-4 py-6 rounded-lg">
@@ -25,7 +43,7 @@ export function DeleteModal({ setOpenModalCancel }: DeleteModalProps) {
                 </div>
 
                 <div className="grid grid-flow-col grid-cols-2 gap-[19px] mt-[60px]">
-                    <Button size="lg">Deletar</Button>
+                    <Button size="lg" onClick={() => deleteTask(id)}>Deletar</Button>
                     <Button size="lg" onClick={() => setOpenModalCancel(false)}>Cancelar</Button>
                 </div>
             </div>
