@@ -3,20 +3,21 @@ import { TaskForm } from "./TaskForm";
 import { useState } from "react";
 import { DeleteModal } from "./DeleteModal";
 import { TaskCompleted } from "@/types/Task";
+import { minutesToHHMM } from "@/utils/ConvertMinutesToHHMM";
 
 interface TaskProps {
     title: string
-    isCompletedTask: boolean
-    isOverdueTask: boolean
+    isCompletedTask?: boolean
+    isOverdueTask?: boolean
     task: TaskCompleted
     view?: boolean
+    getTasks?: () => void
     completedTask?: (id: string) => void
     onClick?: () => void
 }
 
-export function Task({ title, isCompletedTask, isOverdueTask, onClick, view, task, completedTask }: TaskProps) {
+export function Task({ title, isCompletedTask, isOverdueTask, onClick, view, task, getTasks, completedTask }: TaskProps) {
     const [openModalCancel, setOpenModalCancel] = useState(false);
-    
 
     return (
         <>
@@ -32,7 +33,7 @@ export function Task({ title, isCompletedTask, isOverdueTask, onClick, view, tas
                     <div className="flex items-center justify-center gap-5">
                         <button onClick={() => completedTask && completedTask(task.id)} title="Concluir" type="button" className="cursor-pointer"><Check className="w-3 h-3 sm:w-5 sm:h-5" /></button>
                         
-                        <TaskForm defaultValues={{ title }} />
+                        <TaskForm defaultValues={{ ...task, estimatedTime: task?.estimatedTime ? minutesToHHMM(task.estimatedTime) : "00:00" }} />
                         
                         <button title="Excluir" type="button" className="cursor-pointer" onClick={() => setOpenModalCancel(true)}><Trash2 className="w-3 h-3 sm:w-4 sm:h-4" /></button>
                     </div>
@@ -40,7 +41,7 @@ export function Task({ title, isCompletedTask, isOverdueTask, onClick, view, tas
             </div>
 
             {openModalCancel && (
-                <DeleteModal setOpenModalCancel={setOpenModalCancel} />
+                <DeleteModal id={task.id} getTasks={getTasks} setOpenModalCancel={setOpenModalCancel} />
             )}
         </>
     )

@@ -1,9 +1,9 @@
 export type TaskP = {
   title: string;
-  description?: string | null;
-  startDate?: Date | null;
-  dueDate?: Date | null;
-  estimatedTime?: string | null;
+  description?: string;
+  startDate?: Date;
+  dueDate?: Date;
+  estimatedTime?: string;
 };
 
 export type TaskCompleted = TaskP & {

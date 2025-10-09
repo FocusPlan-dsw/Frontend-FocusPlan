@@ -25,7 +25,7 @@ import api from "@/lib/api"
 import { toast } from "react-toastify"
 import { useState } from "react"
 import { TaskP } from "@/types/Task"
-
+import { convertEstimatedTimeToMinutes } from "@/utils/ConvertEstimatedTimeToMinutes"
 
 const createTaskSchema = z.object({
   title: z.string().refine((title) => !!title, {
@@ -42,7 +42,7 @@ const createTaskSchema = z.object({
 })
 
 interface TaskFormProps {
-  defaultValues?: z.infer<typeof createTaskSchema>
+  defaultValues?: z.infer<typeof createTaskSchema> & { id?: string }
   getTasks?: () => void
 }
 
@@ -52,11 +52,12 @@ export function TaskForm({ defaultValues, getTasks }: TaskFormProps) {
         defaultValues: defaultValues ?? {
             title: "",
             description: "",
-            startDate: new Date(),
-            dueDate: new Date(),
+            startDate: undefined,
+            dueDate: undefined,
             estimatedTime: ""
         }
     })
+
 
     const [open, setOpen] = useState(false);
 
@@ -71,21 +72,16 @@ export function TaskForm({ defaultValues, getTasks }: TaskFormProps) {
         return v
     }   
 
-    const convertEstimatedTimeToMinutes = (time: string) => {
-        const [hours, minutes] = time.split(":").map(Number);
-        return (hours * 60) + minutes;
-    }
-
-
     const createTask = async (data: TaskP) => {
         try {
             await api.post("/tasks", {
                 title: data.title,
                 description: data.description ?? "Sem descrição",
-                startDate: data.startDate ?? new Date(),
-                dueDate: data.dueDate ?? new Date(), 
+                startDate: data.startDate ? new Date(data.startDate) : undefined,
+                dueDate: data.dueDate ? new Date(data.dueDate) : undefined, 
                 estimatedTime: convertEstimatedTimeToMinutes(data.estimatedTime ?? "00:00"),
             })
+
             setOpen(false);
             toast.success('Tarefa criada com sucesso!')
             getTasks && getTasks();
@@ -95,6 +91,40 @@ export function TaskForm({ defaultValues, getTasks }: TaskFormProps) {
             toast.error('Erro ao criar tarefa!')
         }
     }
+
+    const updateTask = async (data: TaskP & { id: string }) => {
+        console.log('update')
+        try {
+            await api.put(`/tasks/${data.id}`, {
+                title: data.title,
+                description: data.description ?? "Sem descrição",
+                startDate: data.startDate ? new Date(data.startDate) : undefined,
+                dueDate: data.dueDate ? new Date(data.dueDate) : undefined, 
+                estimatedTime: convertEstimatedTimeToMinutes(data.estimatedTime ?? "00:00"),
+            })
+
+            setOpen(false);
+            toast.success('Tarefa atualizada com sucesso!')
+            getTasks && getTasks();
+
+            } catch (error) {
+            console.log(error)
+            toast.error('Erro ao atualizar tarefa!')
+        }
+    }
+
+
+    const onSubmit = (data: z.infer<typeof createTaskSchema>) => {
+        console.log("entrei")
+        if (defaultValues?.id) {
+            // edição
+            updateTask({ id: defaultValues.id, ...data });
+        } else {
+            // criação
+            createTask(data);
+        }
+    };
+
 
     return (
         <Sheet open={open} onOpenChange={setOpen}>
@@ -113,14 +143,14 @@ export function TaskForm({ defaultValues, getTasks }: TaskFormProps) {
                 </SheetHeader>
 
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(createTask)} className="px-5">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="px-5">
                         <div className="w-full flex flex-col gap-[2rem]">
                             <FormField
                                 control={form.control}
                                 name="title"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel className="text-[14px] font-medium">Título</FormLabel>
+                                        <FormLabel htmlFor="title" className="text-[14px] font-medium">Título</FormLabel>
                                         <FormControl>
                                             <Input placeholder="Digite um título para a tarefa" id="title" type="text" className="border-gray04 rounded-[6px]" {...field} />
                                         </FormControl>
@@ -133,9 +163,10 @@ export function TaskForm({ defaultValues, getTasks }: TaskFormProps) {
                                 name="description"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel className="text-[14px] font-medium">Descrição</FormLabel>
+                                        <FormLabel htmlFor="description" className="text-[14px] font-medium">Descrição</FormLabel>
                                         <FormControl>
                                             <textarea
+                                                id="description"
                                                 data-slot="textarea"
                                                 placeholder="Descreva a atividade"
                                                 className={cn(
@@ -222,19 +253,29 @@ export function TaskForm({ defaultValues, getTasks }: TaskFormProps) {
                                 control={form.control}
                                 name="estimatedTime"
                                 render={({ field }) => {
-                                    const formatTime = (value: string) => {
-                                        let v = value.split(":");
+                                    const formatTime = (value: string | number) => {
+                                        let totalMinutes = 0;
+                                        
+                                        if (typeof value === "string") {
+                                            let v = value.split(":");
 
-                                        if (v[0] !== undefined && v[1] !== undefined) {
-                                            return { hours: `${v[0]}h`, minutes: `${v[1]}min` }
+                                            totalMinutes = Number(v[0]) * 60 + Number(v[1]);
+
+                                        } else {
+                                            totalMinutes = value;
                                         }
+                                        
+                                        const hours = value ? Math.floor(totalMinutes / 60) : 0;
+                                        const minutes = value ?totalMinutes % 60 : 0;
 
-                                        return { hours: "00h", minutes: "00min" }
+                                        return { hours: `${hours.toString().padStart(2, "0")}h`, minutes: `${minutes.toString().padStart(2, "0")}min` };
                                     }
+                                    
+                                    const time = formatTime(field.value ?? 0);
 
                                     return (
                                         <FormItem>
-                                            <FormLabel className="text-[14px] font-medium">Tempo estimado</FormLabel>
+                                            <FormLabel htmlFor="estimatedTime" className="text-[14px] font-medium">Tempo estimado</FormLabel>
                                             <FormControl>
                                                 <Input placeholder="Tempo estimado para tarefa" id="estimatedTime" type="text" className="border-gray04 rounded-[6px]" {...form.register("estimatedTime", { 
                                                     onChange: (e) => {
@@ -243,13 +284,13 @@ export function TaskForm({ defaultValues, getTasks }: TaskFormProps) {
                                                     }
                                                 })} />
                                             </FormControl>
-                                            <p className="text-primary text-[11px]">{formatTime(field.value ?? "00:00").hours} {formatTime(field.value ?? "00:00").minutes}</p>
+                                            <p className="text-primary text-[11px]">{time.hours} {time.minutes}</p>
                                         </FormItem>
                                     )
                                 }}
                             />
                             
-                            <Button size="sm">{defaultValues ? "Salvar" : "Criar"}</Button>
+                            <Button type="submit" size="sm">{defaultValues ? "Salvar" : "Criar"}</Button>
                         </div>
                     </form>
                 </Form>

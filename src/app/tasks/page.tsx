@@ -1,6 +1,6 @@
 "use client";
 
-import { AllWeekTasks } from "@/components/AllWeekTasks";
+import { AllTasks } from "@/components/AllTasks";
 import { CompletedTask } from "@/components/CompletedTask";
 import { OverdueTask } from "@/components/OverdueTask";
 import { TodayTask } from "@/components/TodayTask";
@@ -16,7 +16,7 @@ export default function TasksPage() {
         {step === "today" && <TodayTask />}
         {step === "tomorrow" && <TomorrowTask />}
         {step === "week" && <WeekTask />}
-        {step === "all" && <AllWeekTasks />}
+        {step === "all" && <AllTasks />}
         {step === "completed" && <CompletedTask />}
         {step === "overdue" && <OverdueTask />}
     </>
