@@ -23,7 +23,7 @@ import { format } from "date-fns"
 import { cn } from "@/lib/utils"
 import api from "@/lib/api"
 import { toast } from "react-toastify"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { TaskP } from "@/types/Task"
 import { convertEstimatedTimeToMinutes } from "@/utils/ConvertEstimatedTimeToMinutes"
 
@@ -49,7 +49,7 @@ interface TaskFormProps {
 export function TaskForm({ defaultValues, getTasks }: TaskFormProps) {
       const form = useForm<z.infer<typeof createTaskSchema>>({
         resolver: zodResolver(createTaskSchema),
-        defaultValues: defaultValues ?? {
+        defaultValues: {
             title: "",
             description: "",
             startDate: undefined,
@@ -58,8 +58,19 @@ export function TaskForm({ defaultValues, getTasks }: TaskFormProps) {
         }
     })
 
-
     const [open, setOpen] = useState(false);
+
+    useEffect(() => {
+        if (defaultValues) {
+            const valuesToSet = {
+                ...defaultValues,
+                startDate: defaultValues.startDate ? new Date(defaultValues.startDate) : undefined,
+                dueDate: defaultValues.dueDate ? new Date(defaultValues.dueDate) : undefined,
+            };
+            
+            form.reset(valuesToSet);
+        }
+    }, [defaultValues, form.reset]);
 
     const maskEstimatedTime = (value: string) => {
         let v = value.replace(/\D/g, "")
@@ -70,7 +81,7 @@ export function TaskForm({ defaultValues, getTasks }: TaskFormProps) {
         }
 
         return v
-    }   
+    }  
 
     const createTask = async (data: TaskP) => {
         try {
@@ -84,6 +95,7 @@ export function TaskForm({ defaultValues, getTasks }: TaskFormProps) {
 
             setOpen(false);
             toast.success('Tarefa criada com sucesso!')
+
             getTasks && getTasks();
 
         } catch (error) {
@@ -93,7 +105,6 @@ export function TaskForm({ defaultValues, getTasks }: TaskFormProps) {
     }
 
     const updateTask = async (data: TaskP & { id: string }) => {
-        console.log('update')
         try {
             await api.put(`/tasks/${data.id}`, {
                 title: data.title,
@@ -105,26 +116,23 @@ export function TaskForm({ defaultValues, getTasks }: TaskFormProps) {
 
             setOpen(false);
             toast.success('Tarefa atualizada com sucesso!')
-            getTasks && getTasks();
 
+            getTasks && getTasks();
+    
             } catch (error) {
-            console.log(error)
-            toast.error('Erro ao atualizar tarefa!')
+                console.log(error)
+                toast.error('Erro ao atualizar tarefa!')
         }
     }
 
-
     const onSubmit = (data: z.infer<typeof createTaskSchema>) => {
-        console.log("entrei")
         if (defaultValues?.id) {
-            // edição
             updateTask({ id: defaultValues.id, ...data });
         } else {
-            // criação
             createTask(data);
+            form.reset()
         }
     };
-
 
     return (
         <Sheet open={open} onOpenChange={setOpen}>
@@ -201,7 +209,7 @@ export function TaskForm({ defaultValues, getTasks }: TaskFormProps) {
                                                             </Button>
                                                         </PopoverTrigger>
                                                         <PopoverContent className="w-auto p-0">
-                                                            <Calendar mode="single" selected={field.value} onSelect={field.onChange} />
+                                                            <Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))} />
                                                         </PopoverContent>
                                                     </Popover>
                                                 </FormControl>
@@ -228,7 +236,7 @@ export function TaskForm({ defaultValues, getTasks }: TaskFormProps) {
                                                             </Button>
                                                         </PopoverTrigger>
                                                         <PopoverContent className="w-auto p-0">
-                                                            <Calendar mode="single" selected={field.value} onSelect={(date) => {
+                                                            <Calendar mode="single" selected={field.value} disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))} onSelect={(date) => {
                                                                 const startDate = form.getValues("startDate");
                                                          
                                                                 if (startDate && date && date < startDate) {
@@ -257,12 +265,15 @@ export function TaskForm({ defaultValues, getTasks }: TaskFormProps) {
                                         let totalMinutes = 0;
                                         
                                         if (typeof value === "string") {
-                                            let v = value.split(":");
+                                            let [h, m] = value.split(":");
+                                            
+                                            const hours = Number(h) || 0;
+                                            const minutes = Number(m) || 0;
 
-                                            totalMinutes = Number(v[0]) * 60 + Number(v[1]);
+                                            totalMinutes = hours * 60 + minutes;
 
                                         } else {
-                                            totalMinutes = value;
+                                            totalMinutes = value || 0;
                                         }
                                         
                                         const hours = value ? Math.floor(totalMinutes / 60) : 0;

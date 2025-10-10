@@ -33,7 +33,7 @@ export function Task({ title, isCompletedTask, isOverdueTask, onClick, view, tas
                     <div className="flex items-center justify-center gap-5">
                         <button onClick={() => completedTask && completedTask(task.id)} title="Concluir" type="button" className="cursor-pointer"><Check className="w-3 h-3 sm:w-5 sm:h-5" /></button>
                         
-                        <TaskForm defaultValues={{ ...task, estimatedTime: task?.estimatedTime ? minutesToHHMM(task.estimatedTime) : "00:00" }} />
+                        <TaskForm defaultValues={{ ...task, estimatedTime: task?.estimatedTime ? minutesToHHMM(task.estimatedTime) : "00:00" }} getTasks={getTasks} />
                         
                         <button title="Excluir" type="button" className="cursor-pointer" onClick={() => setOpenModalCancel(true)}><Trash2 className="w-3 h-3 sm:w-4 sm:h-4" /></button>
                     </div>

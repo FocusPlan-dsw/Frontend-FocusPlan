@@ -5,7 +5,7 @@ import { Task } from "./Task"
 import { TaskForm } from "./TaskForm"
 import { useRouter } from "next/navigation"
 import api from "@/lib/api"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { TaskCompleted } from "@/types/Task"
 
 export function TodayTask() {
@@ -38,29 +38,23 @@ export function TodayTask() {
         }
     };
 
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const pendingTasks = useMemo(() => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
 
-    const pendingTasks = tasks.filter(task => {
-        if (!task.dueDate || task.completed) return false;
+        return tasks.filter(task => {
+            if (!task.dueDate || task.completed) return false;
 
-        const due = new Date(task.dueDate);
-        due.setHours(0, 0, 0, 0);
+            const due = new Date(task.dueDate);
+            due.setHours(0, 0, 0, 0);
 
-        return due >= today;
-    }).length;
+            return due >= today;
+        }).length;
+    }, [tasks]);
 
-    const completedTasks = tasks.filter(task => task.completed).length;
-
-    const overdueTasks = tasks.filter(task => {
-        if (!task.dueDate || task.completed) return false;
-
-        const due = new Date(task.dueDate);
-        due.setHours(0, 0, 0, 0);
-
-        return due < today; 
-    }).length;
-
+    const completedTasks = useMemo(() => {
+        return tasks.filter(task => task.completed).length;
+    }, [tasks]);
     
     const completedTask = async (id: string) => {
         try {
@@ -74,7 +68,7 @@ export function TodayTask() {
 
     useEffect(() => {
         getTodayTasks();
-    }, [])
+    }, []);
 
     const filteredTasks = search ? tasks.filter((task) => task.title.toLocaleLowerCase().includes(search.toLocaleLowerCase())) : tasks;
 
@@ -85,7 +79,7 @@ export function TodayTask() {
             <div className="flex gap-12 w-full">
                 <TaskBlock title="Pendentes" value={pendingTasks} />
                 <TaskBlock title="Concluídas" value={completedTasks} />
-                <TaskBlock title="Atrasadas" value={overdueTasks} />
+                <TaskBlock title="Tempo gasto" value="12h 30min" />
             </div>
 
             <div className="flex items-center w-full max-w-[36.25rem] gap-9">
