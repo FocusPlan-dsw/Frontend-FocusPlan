@@ -68,41 +68,45 @@ export default function Login() {
             <SidePanel />
 
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col w-full justify-center items-center gap-[6.25rem] max-lg:p-5">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col w-full justify-center items-center gap-[4rem] max-lg:p-5">
                     <h1 className="font-bold text-[2.5rem] text-primary max-lg:text-[1.5rem]">Acesse sua conta</h1>
+                    
+                    <div className="w-full flex flex-col items-center gap-8 max-w-[531px]">
+                        
+                        <div className="w-full flex flex-col gap-[3.125rem]">
+                            <FormField
+                                control={form.control}
+                                name="email"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Email</FormLabel>
+                                        <FormControl>
+                                            <Input icon={AtSign} placeholder="Digite seu email" id="email" type="text" {...field} />
+                                        </FormControl>
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="password"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Senha</FormLabel>
+                                        <FormControl>
+                                            <Input icon={LockKeyhole} placeholder="Crie uma senha" id="password" type="password" {...field} />
+                                        </FormControl>
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
 
-                    <div className="w-full flex flex-col gap-[3.125rem] max-w-[531px]">
-                        <FormField
-                            control={form.control}
-                            name="email"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Email</FormLabel>
-                                    <FormControl>
-                                        <Input icon={AtSign} placeholder="Digite seu email" id="email" type="text" {...field} />
-                                    </FormControl>
-                                </FormItem>
-                            )}
-                        />
+                        <div className="w-full flex flex-col gap-[1.875rem]">
+                            <Link href="/forgotPassword" className="text-link font-light text-[0.9rem] self-end underline hover:opacity-80 max-lg:text-[0.75rem]">Esqueceu sua senha?</Link>
 
-                        <FormField
-                            control={form.control}
-                            name="password"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Senha</FormLabel>
-                                    <FormControl>
-                                        <Input icon={LockKeyhole} placeholder="Crie uma senha" id="password" type="password" {...field} />
-                                    </FormControl>
-                                </FormItem>
-                            )}
-                        />
+                            <Button disabled={loading}>{loading ? <Spin /> : "Entrar"}</Button>
 
-                        <Link href="/forgotPassword" className="text-link font-light text-[0.9rem] self-end underline hover:opacity-80 max-lg:text-[0.75rem]">Esqueceu sua senha?</Link>
-
-                        <Button disabled={loading}>{loading ? <Spin /> : "Entrar"}</Button>
-
-                        <p className="text-dark-gray font-light text-[1rem] self-end max-lg:text-[0.75rem]">Não tem uma conta? <Link href="/register" className="text-link underline hover:opacity-80">Crie uma conta</Link></p>
+                            <p className="text-dark-gray font-light text-[1rem] self-end max-lg:text-[0.75rem]">Não tem uma conta? <Link href="/register" className="text-link underline hover:opacity-80">Crie uma conta</Link></p>
+                        </div>
                     </div>
                 </form>
             </Form>
