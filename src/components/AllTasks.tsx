@@ -23,19 +23,9 @@ export function AllTasks() {
     }
 
     const filteredTasks = search ? tasks.filter((task) => task.title.toLocaleLowerCase().includes(search.toLocaleLowerCase())) : tasks;
-    const completedTasks = tasks.filter(task => task.completed)
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-
-    const overdueTasks = tasks.filter(task => {
-        if (!task.dueDate || task.completed) return false;
-
-        const due = new Date(task.dueDate);
-        due.setHours(0, 0, 0, 0);
-
-        return due < today; 
-    })
 
     useEffect(() => {
         allGetTasks();
