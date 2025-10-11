@@ -1,38 +1,21 @@
 import Image from "next/image";
 
-import { CalendarCheck2, CalendarRange, Target, BookCheck, TriangleAlert, ClipboardClock, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
 import React from "react";
 import { useStep } from "@/context/StepContext";
+import { buttons } from "@/constants/buttonsSidebar";
+import { useRouter } from "next/navigation";
 
 export function Sidebar() {
-    const {  step, setStep } = useStep();
+    const { step, setStep } = useStep();
 
-    const buttons = [
-        {
-            name: "Hoje", icon: CalendarCheck2, step: "today"
-        },
-        {
-            name: "Amanhã", icon: CalendarCheck2, step: "tomorrow"
-        },
-        {
-            name: "Essa semana", icon: CalendarRange, step: "week"
-        },
-        {
-            name: "Todas as tarefas", icon: Target, step: "all"
-        },
-        {
-            name: "Tarefas concluídas", icon: BookCheck, step: "completed"
-        },
-        {
-            name: "Tarefas atrasadas", icon: TriangleAlert, step: "overdue"
-        },
-        {
-            name: "Relatórios", icon: ClipboardClock, step: "reports"
-        },
-        {
-            name: "Sair", icon: LogOut, step: "logout"
-        }
-    ] as const;
+    const router = useRouter();
+
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+
+        router.push("/login");
+    }
 
     return (
         <aside className="fixed bg-gradient h-screen w-[23.1rem] py-14 flex flex-col gap-20">
@@ -46,6 +29,12 @@ export function Sidebar() {
                         </button>
                     </li>
                 ))}
+
+                <li>
+                    <button className={`w-full px-8 py-2 flex gap-3 text-xl text-white items-center cursor-pointer ${step === "logout" ? "bg-light-gray/40" : ""} hover:opacity-80`} onClick={handleLogout}>
+                        <LogOut /> Sair
+                    </button>
+                </li>
             </ul>
         </aside>
     )
