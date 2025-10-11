@@ -3,8 +3,9 @@ import { Input } from "./ui/input"
 import { Task } from "./Task"
 import { useEffect, useState } from "react";
 import { TaskCompleted } from "@/types/Task";
-import api from "@/lib/api";
 import { useRouter } from "next/navigation";
+
+import api from "@/lib/api";
 
 export function CompletedTask() {
     const [tasks, setTasks] = useState<TaskCompleted[]>([]);
@@ -39,16 +40,22 @@ export function CompletedTask() {
             </div>
 
             <div className="flex flex-col gap-12">
-                {filteredTasks.map((task) => (
-                    <Task 
-                        key={task.id}
-                        title={task.title} 
-                        onClick={() => router.push(`/tasks/${task.id}`)}
-                        view
-                        isCompletedTask
-                        task={task}
-                    />
-                ))}
+                {filteredTasks.length === 0 ? (
+                    <p className="text-center text-gray-500 mt-4">
+                        Nenhuma tarefa encontrada.
+                    </p>
+                    ) : (
+                    filteredTasks.map((task) => (
+                        <Task 
+                            key={task.id}
+                            title={task.title} 
+                            onClick={() => router.push(`/tasks/${task.id}`)}
+                            view
+                            isCompletedTask
+                            task={task}
+                        />
+                    ))
+                )}
             </div>
         </section>    
     )
