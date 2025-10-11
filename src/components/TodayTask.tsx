@@ -90,7 +90,7 @@ export function TodayTask() {
         <section className="w-full flex flex-col gap-20 pb-10">
             <h1 className="text-3xl text-primary">Tarefas de hoje</h1>
 
-            <div className="flex gap-12 w-full">
+            <div className="flex gap-12 w-full max-lg:flex-col max-[1220px]:gap-3">
                 <TaskBlock title="Pendentes" value={pendingTasks} />
                 <TaskBlock title="Concluídas" value={completedTasks} />
                 <TaskBlock title="Tempo gasto" value="12h 30min" />
@@ -100,6 +100,7 @@ export function TodayTask() {
                 <div  className="flex-1">
                     <Input placeholder="Pesquisar tarefa" icon={Search} value={search} onChange={(e) => setSearch(e.target.value)} />
                 </div>
+
                 <TaskForm getTasks={getTodayTasks} />
             </div>
 
