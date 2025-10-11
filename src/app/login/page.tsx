@@ -16,13 +16,17 @@ import { Spin } from "@/components/Spin";
 import { useRouter } from "next/navigation";
 
 const loginSchema = z.object({
-  email: z.string().refine((email) => !!email, {
-    message: "O email é obrigatório.",
-  }),
+  email: z
+    .email({ message: "O email é inválido." }) 
+    .trim(),
 
-  password: z.string().refine((password) => !!password, {
-    message: "A senha é obrigatória.",
-  }),
+  password: z
+    .string()
+    .trim()
+    .refine((password) => !!password, {
+        message: 'A senha é obrigatória'
+    })
+    .min(8, 'A senha deve ter pelo menos 8 caracteres')
 })
 
 export default function Login() {
@@ -83,6 +87,7 @@ export default function Login() {
                                         <FormControl>
                                             <Input icon={AtSign} placeholder="Digite seu email" id="email" type="text" {...field} />
                                         </FormControl>
+                                        {form.formState.errors.email && <span className="text-sm text-red-600">{form.formState.errors.email.message}</span>}
                                     </FormItem>
                                 )}
                             />
@@ -95,6 +100,7 @@ export default function Login() {
                                         <FormControl>
                                             <Input icon={LockKeyhole} placeholder="Crie uma senha" id="password" type="password" {...field} />
                                         </FormControl>
+                                        {form.formState.errors.password && <span className="text-sm text-red-600">{form.formState.errors.password.message}</span>}
                                     </FormItem>
                                 )}
                             />

@@ -22,7 +22,7 @@ export function Task({ title, isCompletedTask, isOverdueTask, onClick, view, tas
 
     return (
         <>
-            <div className={`flex border border-gray02 rounded-[9px] p-5 justify-between max-w-[47.5rem]
+            <div className={`flex border border-gray02 rounded-[9px] p-5 justify-between max-w-[47.5rem] max-lg:max-w-full
                 ${isCompletedTask ? "bg-green-sucess" : isOverdueTask ? "bg-red-200" : "bg-gray01"}
             `}>
                 <div className="flex items-center gap-3.5">

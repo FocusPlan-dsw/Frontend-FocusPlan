@@ -19,21 +19,35 @@ import api from "@/lib/api";
 import { Spin } from "@/components/Spin";
 
 const registerSchema = z.object({
-  fullName: z.string().refine((name) => !!name, {
-    message: "O nome completo é obrigatório.",
-  }),
+  fullName: z
+    .string()
+    .refine((name) => !!name, {
+        message: "O nome completo é obrigatório.",
+    })
+    .regex(/^[A-Za-zÀ-ÿ]+(\s+[A-Za-zÀ-ÿ]+)+$/, 'Digite nome e sobrenome (apenas letras e espaço)')
+    .min(5, 'Nome muito curto'),
   
-  email: z.string().refine((email) => !!email, {
-    message: "O email é obrigatório.",
-  }),
+  email: z
+    .email({ message: "O email é inválido." }) 
+    .trim(),
 
-  password: z.string().refine((password) => !!password, {
-    message: "A senha é obrigatória.",
-  }),
+  password: z
+    .string()
+    .refine((password) => !!password, {
+        message: "A senha é obrigatória.",
+    })
+    .trim()
+    .min(8, 'A senha deve ter pelo menos 8 caracteres')
+    .refine((password) => /[A-Z]/.test(password), { message: "A senha deve conter pelo menos uma letra maiúscula." })
+    .refine((password) => /[a-z]/.test(password), { message: "A senha deve conter pelo menos uma letra minúscula." })
+    .refine((password) => /[0-9]/.test(password), { message: "A senha deve conter pelo menos um número." })
+    .refine((password) => /[^A-Za-z0-9]/.test(password), { message: "A senha deve conter pelo menos um caractere especial." }),
 
-  confirmPassword: z.string().refine((password) => !!password, {
-    message: "A confirmação de senha é obrigatória.", 
-  })
+  confirmPassword: z
+    .string()
+    .refine((password) => !!password, {
+        message: "A confirmação de senha é obrigatória.", 
+    })
 }).refine((password) => password.password === password.confirmPassword, {
   message: "As senhas não coincidem.",
   path: ["confirmPassword"]
@@ -98,6 +112,7 @@ export default function Register() {
                                     <FormControl>
                                         <Input icon={UserRound} placeholder="Nome" id="fullName" type="text" {...field} />
                                     </FormControl>
+                                    {form.formState.errors.fullName && <span className="text-sm text-red-600">{form.formState.errors.fullName.message}</span>}
                                 </FormItem>
                             )}
                         />
@@ -111,6 +126,7 @@ export default function Register() {
                                     <FormControl>
                                         <Input icon={AtSign} placeholder="Digite seu email" id="email" type="text" {...field} />
                                     </FormControl>
+                                    {form.formState.errors.email && <span className="text-sm text-red-600">{form.formState.errors.email.message}</span>}
                                 </FormItem>
                             )}
                         />
@@ -124,6 +140,7 @@ export default function Register() {
                                     <FormControl>
                                         <Input icon={LockKeyhole} placeholder="Crie uma senha" id="password" type="password" {...field} />
                                     </FormControl>
+                                    {form.formState.errors.password && <span className="text-sm text-red-600">{form.formState.errors.password.message}</span>}
                                 </FormItem>
                             )}
                         />
@@ -137,6 +154,7 @@ export default function Register() {
                                     <FormControl>
                                         <Input icon={LockKeyhole} placeholder="Confirme sua senha" id="confirmPassword" type="password" {...field} />
                                     </FormControl>
+                                    {form.formState.errors.confirmPassword && <span className="text-sm text-red-600">{form.formState.errors.confirmPassword.message}</span>}
                                 </FormItem>
                             )}
                         />

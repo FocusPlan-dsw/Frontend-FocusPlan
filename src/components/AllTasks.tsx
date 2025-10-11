@@ -3,8 +3,9 @@ import { Input } from "./ui/input"
 import { Task } from "./Task"
 import { useEffect, useState } from "react";
 import { TaskCompleted } from "@/types/Task";
-import api from "@/lib/api";
 import { useRouter } from "next/navigation";
+
+import api from "@/lib/api";
 
 export function AllTasks() {
     const [tasks, setTasks] = useState<TaskCompleted[]>([]);
@@ -21,6 +22,19 @@ export function AllTasks() {
             console.log(error);
         }
     }
+
+    const isCompletedTaskDue = () => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        return tasks.filter(task => {
+            if (!task.dueDate) return false;
+                const due = new Date(task.dueDate);
+                due.setHours(0, 0, 0, 0);
+
+            return task.completed && due < today;
+        });
+    };
 
     const filteredTasks = search ? tasks.filter((task) => task.title.toLocaleLowerCase().includes(search.toLocaleLowerCase())) : tasks;
 
@@ -43,23 +57,28 @@ export function AllTasks() {
             </div>
 
             <div className="flex flex-col gap-12">
-                {filteredTasks.map(task => {
-                    const isCompleted = task.completed;
-                    const isOverdue = !task.completed && task.dueDate
-                        ? new Date(task.dueDate).setHours(0,0,0,0) < today.getTime()
-                        : false;
+                {filteredTasks.length === 0 ? (
+                    <p className="text-center text-gray-500 mt-4">
+                        Nenhuma tarefa encontrada.
+                    </p>
+                    ) : (
+                        filteredTasks.map(task => {
+                            const isCompleted = task.completed;
+                            const isOverdue = !task.completed && task.dueDate ? new Date(task.dueDate).setHours(0, 0, 0, 0) < today.getTime() : false;
 
-                    return (
-                        <Task
-                            key={task.id}
-                            title={task.title}
-                            task={task}
-                            onClick={() => router.push(`/tasks/${task.id}`)}
-                            isCompletedTask={isCompleted}
-                            isOverdueTask={isOverdue}
-                        />
-                    )
-                })}
+                            return (
+                                <Task
+                                    key={task.id}
+                                    title={task.title}
+                                    task={task}
+                                    onClick={() => router.push(`/tasks/${task.id}`)}
+                                    isCompletedTask={isCompleted}
+                                    isOverdueTask={isOverdue}
+                                    view={isCompletedTaskDue().includes(task)}
+                                />
+                            );
+                        })
+                    )}
             </div>
         </section>    
     )

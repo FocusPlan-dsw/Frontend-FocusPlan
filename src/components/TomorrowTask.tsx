@@ -2,11 +2,12 @@ import { Search } from "lucide-react"
 import { Input } from "./ui/input"
 import { TaskBlock } from "./TaskBlock"
 import { Task } from "./Task"
-import api from "@/lib/api";
 import { TaskCompleted } from "@/types/Task";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { TaskForm } from "./TaskForm";
+
+import api from "@/lib/api";
 
 export function TomorrowTask() {
     const [tasks, setTasks] = useState<TaskCompleted[]>([]);
@@ -57,6 +58,19 @@ export function TomorrowTask() {
         return tasks.filter(task => task.completed).length;
     }, [tasks]);
 
+    const isCompletedTaskDue = () => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        return tasks.filter(task => {
+            if (!task.dueDate) return false;
+                const due = new Date(task.dueDate);
+                due.setHours(0, 0, 0, 0);
+
+            return task.completed && due < today;
+        });
+    };
+
     const completedTask = async (id: string) => {
         try {
             await api.patch(`/tasks/${id}/complete`);
@@ -91,9 +105,24 @@ export function TomorrowTask() {
             </div>
 
             <div className="flex flex-col gap-12">
-                {filteredTasks.map((task) => (
-                    <Task key={task.id} getTasks={getTomorrowTasks} title={task.title} task={task} completedTask={completedTask} isCompletedTask={task.completed} onClick={() => router.push(`/tasks/${task.id}`)} isOverdueTask={!!(!task.completed && task.dueDate && new Date(task.dueDate).setHours(0, 0, 0, 0) < new Date().setHours(0, 0, 0, 0))} />
-                ))}
+                {filteredTasks.length === 0 ? (
+                    <p className="text-center text-gray-500 mt-4">
+                        Nenhuma tarefa encontrada.
+                    </p>
+                    ) : (
+                    filteredTasks.map((task) => (
+                        <Task 
+                            key={task.id} 
+                            getTasks={getTomorrowTasks} 
+                            title={task.title} 
+                            task={task} 
+                            completedTask={completedTask} 
+                            isCompletedTask={task.completed} 
+                            onClick={() => router.push(`/tasks/${task.id}`)} 
+                            isOverdueTask={!!(!task.completed && task.dueDate && new Date(task.dueDate).setHours(0, 0, 0, 0) < new Date().setHours(0, 0, 0, 0))} view={isCompletedTaskDue().includes(task)} 
+                        />
+                    ))
+                )}
             </div>
         </section>    
     )
