@@ -265,7 +265,7 @@ export function TaskForm({ defaultValues, getTasks }: TaskFormProps) {
                                         let totalMinutes = 0;
                                         
                                         if (typeof value === "string") {
-                                            let [h, m] = value.split(":");
+                                            const [h, m] = value.split(":");
                                             
                                             const hours = Number(h) || 0;
                                             const minutes = Number(m) || 0;
