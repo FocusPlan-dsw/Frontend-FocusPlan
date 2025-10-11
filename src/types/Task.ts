@@ -9,4 +9,5 @@ export type TaskP = {
 export type TaskCompleted = TaskP & {
   id: string;
   completed: boolean;
+  timeDedicated?: number;
 };

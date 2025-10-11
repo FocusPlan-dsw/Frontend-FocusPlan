@@ -4,6 +4,7 @@ import { useState } from "react";
 import { DeleteModal } from "./DeleteModal";
 import { TaskCompleted } from "@/types/Task";
 import { minutesToHHMM } from "@/utils/ConvertMinutesToHHMM";
+import Link from "next/link";
 
 interface TaskProps {
     title: string
@@ -24,9 +25,18 @@ export function Task({ title, isCompletedTask, isOverdueTask, onClick, view, tas
             <div className={`flex border border-gray02 rounded-[9px] p-5 justify-between max-w-[47.5rem]
                 ${isCompletedTask ? "bg-green-sucess" : isOverdueTask ? "bg-red-200" : "bg-gray01"}
             `}>
-                <div className="flex items-center gap-3.5 cursor-pointer" onClick={onClick}>
-                    <span className="text-primary"><CirclePlay className="w-3 h-3 sm:w-5 sm:h-5" /></span>
-                    <p className="text-dark-gray text-lg font-normal break-words hover:underline">{title}</p>
+                <div className="flex items-center gap-3.5">
+                    <Link
+                        href={`/stopWatchPage/${task.id}`}
+                        className="text-primary"
+                        title="Iniciar cronômetro"
+                    >
+                        <CirclePlay className="w-3 h-3 sm:w-5 sm:h-5" />
+                    </Link>
+
+                    <div className="cursor-pointer" onClick={onClick}>
+                        <p className="text-dark-gray text-lg font-normal break-words hover:underline">{title}</p>
+                    </div>
                 </div>
 
                 {!isOverdueTask && !view && (
