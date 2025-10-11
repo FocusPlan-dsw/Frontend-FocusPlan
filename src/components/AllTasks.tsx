@@ -1,11 +1,12 @@
 import { Search, Plus } from "lucide-react"
 import { Input } from "./ui/input"
 import { Task } from "./Task"
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { TaskCompleted } from "@/types/Task";
 import { useRouter } from "next/navigation";
 
 import api from "@/lib/api";
+import { TaskBlock } from "./TaskBlock";
 
 export function AllTasks() {
     const [tasks, setTasks] = useState<TaskCompleted[]>([]);
@@ -22,6 +23,24 @@ export function AllTasks() {
             console.log(error);
         }
     }
+
+    const pendingTasks = useMemo(() => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        return tasks.filter(task => {
+            if (!task.dueDate || task.completed) return false;
+
+            const due = new Date(task.dueDate);
+            due.setHours(0, 0, 0, 0);
+
+            return due >= today;
+        }).length;
+    }, [tasks]);
+    
+    const completedTasks = useMemo(() => {
+        return tasks.filter(task => task.completed).length;
+    }, [tasks]);
 
     const isCompletedTaskDue = () => {
         const today = new Date();
@@ -48,6 +67,12 @@ export function AllTasks() {
     return (
         <section className="w-full flex flex-col gap-20 pb-10">
             <h1 className="text-3xl text-primary">Todas as tarefas</h1>
+
+            <div className="flex gap-12 w-full">
+                <TaskBlock title="Pendentes" value={pendingTasks} />
+                <TaskBlock title="Concluídas" value={completedTasks} />
+                <TaskBlock title="Tempo gasto" value="12h e 20min" />
+            </div>
 
             <div className="flex items-center w-full max-w-[580px] gap-9">
                 <div  className="flex-1">
