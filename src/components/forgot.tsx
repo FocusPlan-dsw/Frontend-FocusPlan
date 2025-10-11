@@ -13,9 +13,9 @@ import { useState } from "react";
 import { Spin } from "@/components/Spin";
 
 const forgotPasswordSchema = z.object({
-  email: z.string().refine((email) => !!email, {
-    message: "O email é obrigatório.",
-  }),
+   email: z
+    .email({ message: "O email é inválido." }) 
+    .trim(),
 })
 
 interface ForgotProps {
@@ -71,6 +71,7 @@ export default function Forgot({ onCodeVerified, setEmail }: ForgotProps) {
                                     <FormControl>
                                         <Input icon={AtSign} placeholder="Digite o email cadastrado" id="email" type="text" {...field} />
                                     </FormControl>
+                                    {form.formState.errors.email && <span className="text-sm text-red-600">{form.formState.errors.email.message}</span>}
                                 </FormItem>
                             )}
                         />

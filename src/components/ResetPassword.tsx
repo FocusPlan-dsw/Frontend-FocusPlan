@@ -14,9 +14,13 @@ import { useState } from "react";
 import { Spin } from "./Spin";
 
 const resetPasswordSchema = z.object({
-  password: z.string().refine((password) => !!password, {
-    message: "A senha é obrigatória.",
-  }),
+  password: z
+    .string()
+    .trim()
+    .refine((password) => !!password, {
+        message: 'A senha é obrigatória'
+    })
+    .min(8, 'A senha deve ter pelo menos 8 caracteres')
 })
 
 interface ResetPasswordProps {
@@ -80,6 +84,7 @@ export default function ResetPassword({ code }: ResetPasswordProps) {
                                     <FormControl>
                                         <Input icon={LockKeyhole} placeholder="Digite a sua nova senha" id="passwordRP" type="password" {...field} />
                                     </FormControl>
+                                    {form.formState.errors.password && <span className="text-sm text-red-600">{form.formState.errors.password.message}</span>}
                                 </FormItem>
                             )}
                         />
