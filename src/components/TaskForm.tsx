@@ -139,13 +139,13 @@ export function TaskForm({ defaultValues, getTasks }: TaskFormProps) {
             <SheetTrigger asChild>
                 {
                     defaultValues ? (
-                        <button title="Editar" type="button" className="cursor-pointer"><Pen className="w-3 h-3 sm:w-4 sm:h-4" /></button>
+                        <button title="Editar" type="button" className="cursor-pointer"><Pen className="w-4 h-4" /></button>
                     ) : (
                         <button title="Criar tarefa" className="flex items-center justify-center text-primary bg-gray01 border-[0.5px] border-gray02 rounded-[9px] w-[60px] h-[48px] cursor-pointer hover:opacity-80"><Plus size={18} /></button>
                     )
                 }
             </SheetTrigger>
-            <SheetContent>
+            <SheetContent className="overflow-y-auto overflow-x-hidden max-[1025px]:pb-10">
                 <SheetHeader>
                     <SheetTitle>{defaultValues ? "Editar tarefa" : "Criar nova tarefa"}</SheetTitle>
                 </SheetHeader>
@@ -178,7 +178,7 @@ export function TaskForm({ defaultValues, getTasks }: TaskFormProps) {
                                                 data-slot="textarea"
                                                 placeholder="Descreva a atividade"
                                                 className={cn(
-                                                    "placeholder:text-gray02 dark:bg-input/30 border border-gray04 w-full min-w-0 rounded-[6px] bg-transparent py-2 px-3 text-base transition-color outline-none resize-none h-[6rem] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                                                    "placeholder:text-gray02 placeholder:text-[13px] dark:bg-input/30 border border-gray04 w-full min-w-0 rounded-[6px] bg-transparent py-2 px-3 text-base transition-color outline-none resize-none h-[6rem] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                                                 )}
                                                 {...field}
                                             />
@@ -189,7 +189,7 @@ export function TaskForm({ defaultValues, getTasks }: TaskFormProps) {
 
                             <div className="flex flex-col gap-4">
                                 <p className="text-[14px] font-medium text-dark-gray">Prazo estimado</p>
-                                <div className="flex gap-6">
+                                <div className="flex gap-6 max-md:flex-col">
                                     <FormField
                                         control={form.control}
                                         name="startDate"
@@ -205,7 +205,7 @@ export function TaskForm({ defaultValues, getTasks }: TaskFormProps) {
                                                                 className="data-[empty=true]:text-date w-[165px] justify-start text-left font-normal"
                                                             >
                                                                 <CalendarIcon />
-                                                                {field.value ? format(field.value, "dd/MM/yyyy") : <span>Data de início</span>}
+                                                                {field.value ? format(field.value, "dd/MM/yyyy") : <span className="max-md:text-[12px]">Data de início</span>}
                                                             </Button>
                                                         </PopoverTrigger>
                                                         <PopoverContent className="w-auto p-0">
@@ -232,7 +232,7 @@ export function TaskForm({ defaultValues, getTasks }: TaskFormProps) {
                                                                 className="data-[empty=true]:text-date w-[165px] justify-start text-left font-normal"
                                                             >
                                                                 <CalendarIcon />
-                                                                {field.value ? format(field.value, "dd/MM/yyyy") : <span>Data de conclusão</span>}
+                                                                {field.value ? format(field.value, "dd/MM/yyyy") : <span className="max-md:text-[12px]">Data de conclusão</span>}
                                                             </Button>
                                                         </PopoverTrigger>
                                                         <PopoverContent className="w-auto p-0">

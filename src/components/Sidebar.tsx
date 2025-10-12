@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { useStep } from "@/context/StepContext";
 import { buttons } from "@/constants/buttonsSidebar";
 import { useRouter } from "next/navigation";
+import { set } from "zod";
 
 export function Sidebar() {
     const [open, setOpen] = useState(false);
@@ -35,21 +36,24 @@ export function Sidebar() {
             )}
 
             <aside
-                className={`fixed top-0 left-0 z-50 bg-gradient h-screen py-14 flex flex-col gap-20 transform transition-transform duration-300
-                ${open ? "translate-x-0" : "-translate-x-full w-[23.1rem]"} lg:translate-x-0`}
+                className={`w-[23.1rem] fixed top-0 left-0 z-50 bg-gradient h-screen py-14 flex flex-col gap-20 transform transition-transform duration-300 max-[1025px]:gap-10
+                ${open ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}
             >
-                <Image src="/sidebar.svg" alt="sidebar" width={210} height={75} className="mx-auto" />
+                <Image src="/sidebar.svg" alt="sidebar" width={210} height={75} className="mx-auto max-md:pt-10" />
 
-                <ul className="flex flex-col gap-[1.5rem] h-full">
+                <ul className="flex flex-col gap-[1.5rem] h-full max-[1025px]:gap-[0.8rem]">
                     {buttons.map((button) => (
                         <li key={button.name}>
-                        <button
-                            className={`w-full px-8 py-2 flex gap-3 text-xl text-white items-center cursor-pointer 
-                            ${step === button.step ? "bg-light-gray/40" : ""} hover:opacity-80`}
-                            onClick={() => setStep(button.step)}
-                        >
-                            <button.icon /> {button.name}
-                        </button>
+                            <button
+                                className={`w-full px-8 py-2 flex gap-3 text-xl text-white items-center cursor-pointer 
+                                ${step === button.step ? "bg-light-gray/40" : ""} hover:opacity-80`}
+                                onClick={() => {
+                                    setStep(button.step)
+                                    setOpen(false)
+                                }}
+                            >
+                                <button.icon /> {button.name}
+                            </button>
                         </li>
                     ))}
 

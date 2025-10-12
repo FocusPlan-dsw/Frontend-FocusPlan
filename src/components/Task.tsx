@@ -31,21 +31,21 @@ export function Task({ title, isCompletedTask, isOverdueTask, onClick, view, tas
                         className="text-primary"
                         title="Iniciar cronômetro"
                     >
-                        <CirclePlay className="w-3 h-3 sm:w-5 sm:h-5" />
+                        <CirclePlay className="w-6 h-6 sm:w-5 sm:h-5" />
                     </Link>
 
                     <div className="cursor-pointer" onClick={onClick}>
-                        <p className="text-dark-gray text-lg font-normal break-words hover:underline">{title}</p>
+                        <p className="text-dark-gray text-lg font-normal break-words hover:underline max-md:text-[15px] max-md:truncate max-md:block max-md:max-w-[8rem]">{title}</p>
                     </div>
                 </div>
 
                 {!isOverdueTask && !view && (
                     <div className="flex items-center justify-center gap-5">
-                        <button onClick={() => completedTask && completedTask(task.id)} title="Concluir" type="button" className="cursor-pointer"><Check className="w-3 h-3 sm:w-5 sm:h-5" /></button>
+                        <button onClick={() => completedTask && completedTask(task.id)} title="Concluir" type="button" className="cursor-pointer"><Check className="w-5 h-5" /></button>
                         
                         <TaskForm defaultValues={{ ...task, estimatedTime: task?.estimatedTime ? minutesToHHMM(task.estimatedTime) : "00:00" }} getTasks={getTasks} />
                         
-                        <button title="Excluir" type="button" className="cursor-pointer" onClick={() => setOpenModalCancel(true)}><Trash2 className="w-3 h-3 sm:w-4 sm:h-4" /></button>
+                        <button title="Excluir" type="button" className="cursor-pointer" onClick={() => setOpenModalCancel(true)}><Trash2 className="w-4 h-4" /></button>
                     </div>
                 )}
             </div>

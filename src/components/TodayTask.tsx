@@ -82,7 +82,7 @@ export function TodayTask() {
 
   return (
     <section className="w-full flex flex-col gap-20 pb-10">
-      <h1 className="text-3xl text-primary">Tarefas de hoje</h1>
+      <h1 className="text-3xl text-primary max-md:text-2xl">Tarefas de hoje</h1>
 
       <div className="flex gap-12 w-full max-lg:flex-col max-[1220px]:gap-3">
         <TaskBlock title="Pendentes" value={pendingTasks} />

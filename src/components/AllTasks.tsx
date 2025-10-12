@@ -1,4 +1,4 @@
-import { Search, Plus } from "lucide-react"
+import { Search } from "lucide-react"
 import { Input } from "./ui/input"
 import { Task } from "./Task"
 import { useEffect, useMemo, useState } from "react";
@@ -81,15 +81,15 @@ export function AllTasks() {
 
     return (
         <section className="w-full flex flex-col gap-20 pb-10">
-            <h1 className="text-3xl text-primary">Todas as tarefas</h1>
+            <h1 className="text-3xl text-primary max-md:text-2xl">Todas as tarefas</h1>
 
-            <div className="flex gap-12 w-full">
+            <div className="flex gap-12 w-full max-lg:flex-col max-[1220px]:gap-3">
                 <TaskBlock title="Pendentes" value={pendingTasks} />
                 <TaskBlock title="Concluídas" value={completedTasks} />
-                <TaskBlock title="Tempo gasto" value={timeDedicated} />
+                <TaskBlock title="Tempo dedicado" value={timeDedicated} />
             </div>
 
-            <div className="flex items-center w-full max-w-[580px] gap-9">
+            <div className="flex items-center w-full max-w-[580px] gap-9 ">
                 <div  className="flex-1">
                     <Input placeholder="Pesquisar tarefa" icon={Search } value={search} onChange={(e) => setSearch(e.target.value)} />
                 </div>
