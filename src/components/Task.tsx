@@ -17,7 +17,7 @@ interface TaskProps {
     onClick?: () => void
 }
 
-export function Task({ title, isCompletedTask, isOverdueTask, onClick, view, task, getTasks, completedTask }: TaskProps) {
+export function Task({ title, isCompletedTask, isOverdueTask, view, task, getTasks, completedTask }: TaskProps) {
     const [openModalCancel, setOpenModalCancel] = useState(false);
 
     return (
@@ -34,9 +34,9 @@ export function Task({ title, isCompletedTask, isOverdueTask, onClick, view, tas
                         <CirclePlay className="w-3 h-3 sm:w-5 sm:h-5" />
                     </Link>
 
-                    <div className="cursor-pointer" onClick={onClick}>
+                    <Link className="cursor-pointer" href={`/tasks/${task.id}`}>
                         <p className="text-dark-gray text-lg font-normal break-words hover:underline">{title}</p>
-                    </div>
+                    </Link>
                 </div>
 
                 {!isOverdueTask && !view && (
