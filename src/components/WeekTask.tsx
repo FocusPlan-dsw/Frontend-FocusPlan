@@ -6,66 +6,52 @@ import { TaskCompleted } from "@/types/Task";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { TaskForm } from "./TaskForm";
-import { getDay } from "date-fns";
 
 import api from "@/lib/api";
+import { formatSeconds } from "./FormatSeconds";
 
 export function WeekTask() {
     const [tasks, setTasks] = useState<TaskCompleted[]>([]);
     const [search, setSearch] = useState("");
+    const [timeDedicated, setTimeDedicated] = useState("0h e 0min")
 
     const router = useRouter();
 
     const getWeekTasks = async () => {
         try {
-            const response = await api.get("/tasks");
+            const response = await api.get("/tasks", {
+                params: {
+                    period: "week"
+                }
+            });
             const tasks = response.data;
 
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-
-            const startOfWeek = new Date();
-            const day = getDay(today);
-            startOfWeek.setDate(today.getDate() - day);
-            startOfWeek.setHours(0, 0, 0, 0);
-
-            const endOfWeek = new Date(startOfWeek);
-            endOfWeek.setDate(startOfWeek.getDate() + 6);
-            endOfWeek.setHours(23, 59, 59, 999);
-
-            const weekTasks = tasks.filter((task: TaskCompleted) => {
-                if (!task.startDate || !task.dueDate) return false;
-
-                const start = new Date(task.startDate);
-                const due = new Date(task.dueDate);
-
-                return start >= startOfWeek && due <= endOfWeek
-            });
-
-            setTasks(weekTasks);
+            setTasks(tasks);
 
         } catch (error) {
             console.log(error);
         }
     };
 
-    const pendingTasks = useMemo(() => {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
+    const getTimeDedicated = async () => {
+        try {
+            const response = await api.get("/tasks/summary/time-dedicated")
+            const formattedTime = formatSeconds(response.data.today)
+            setTimeDedicated(formattedTime)
+        } catch (error) {
+            console.error("Erro ao buscar tempo dedicado:", error)
+        }
+    }
 
-        return tasks.filter(task => {
-            if (!task.dueDate || task.completed) return false;
-
-            const due = new Date(task.dueDate);
-            due.setHours(0, 0, 0, 0);
-
-            return due >= today;
-        }).length;
-    }, [tasks]);
-
-    const completedTasks = useMemo(() => {
-        return tasks.filter(task => task.completed).length;
-    }, [tasks]);
+    const pendingTasks = useMemo(
+        () => tasks.filter((task) => !task.completed).length,
+        [tasks]
+    );
+    
+    const completedTasks = useMemo(
+        () => tasks.filter((task) => task.completed).length,
+        [tasks]
+    )
 
     const isCompletedTaskDue = () => {
         const today = new Date();
@@ -82,16 +68,16 @@ export function WeekTask() {
 
     const completedTask = async (id: string) => {
         try {
-            await api.patch(`/tasks/${id}/complete`);
-            await getWeekTasks();
-
+            await api.patch(`/tasks/${id}/complete`)
+            await Promise.all([getWeekTasks(), getTimeDedicated()])
         } catch (error) {
-            console.log(error)
+            console.error("Erro ao marcar tarefa como concluída:", error)
         }
     }
 
     useEffect(() => {
         getWeekTasks();
+        getTimeDedicated();
     }, []);
 
     const filteredTasks = search ? tasks.filter((task) => task.title.toLocaleLowerCase().includes(search.toLocaleLowerCase())) : tasks;
@@ -103,14 +89,14 @@ export function WeekTask() {
             <div className="flex gap-12 w-full">
                 <TaskBlock title="Pendentes" value={pendingTasks} />
                 <TaskBlock title="Concluídas" value={completedTasks} />
-                <TaskBlock title="Tempo gasto" value="12h e 20min" />
+                <TaskBlock title="Tempo gasto" value={timeDedicated} />
             </div>
 
             <div className="flex items-center w-full max-w-[580px] gap-9">
                 <div  className="flex-1">
                     <Input placeholder="Pesquisar tarefa" icon={Search} value={search} onChange={(e) => setSearch(e.target.value)} />
                 </div>
-                <TaskForm getTasks={getWeekTasks} />
+                <TaskForm getTasks={() => Promise.all([getWeekTasks(), getTimeDedicated()])} />
             </div>
 
             <div className="flex flex-col gap-12">
@@ -122,7 +108,7 @@ export function WeekTask() {
                     filteredTasks.map((task) => (
                         <Task 
                             key={task.id} 
-                            getTasks={getWeekTasks} 
+                            getTasks={() => Promise.all([getWeekTasks(), getTimeDedicated()])}
                             title={task.title} 
                             task={task} 
                             completedTask={completedTask} 
