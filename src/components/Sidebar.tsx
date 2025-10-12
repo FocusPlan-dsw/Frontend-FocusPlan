@@ -1,22 +1,33 @@
 import Image from "next/image";
-
 import { LogOut, MenuIcon, X } from "lucide-react";
 import React, { useState } from "react";
 import { useStep } from "@/context/StepContext";
 import { buttons } from "@/constants/buttonsSidebar";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
+import { Step } from "@/types/Step";
 
 export function Sidebar() {
     const [open, setOpen] = useState(false);
     const { step, setStep } = useStep();
-
     const router = useRouter();
+    const pathname = usePathname();
 
     const handleLogout = () => {
         localStorage.removeItem("token");
-
         router.push("/login");
-    }
+    };
+
+    const handleNavigation = (buttonStep: Step) => {
+        if (buttonStep === "reports") {
+            router.push("/reports");
+        } else {
+            if (!pathname.startsWith('/tasks')) {
+                router.push("/tasks");
+            }
+            setStep(buttonStep);
+        }
+        setOpen(false);
+    };
 
     return (
         <>
@@ -41,17 +52,21 @@ export function Sidebar() {
                 <Image src="/sidebar.svg" alt="sidebar" width={210} height={75} className="mx-auto" />
 
                 <ul className="flex flex-col gap-[1.5rem] h-full">
-                    {buttons.map((button) => (
-                        <li key={button.name}>
-                        <button
-                            className={`w-full px-8 py-2 flex gap-3 text-xl text-white items-center cursor-pointer 
-                            ${step === button.step ? "bg-light-gray/40" : ""} hover:opacity-80`}
-                            onClick={() => setStep(button.step)}
-                        >
-                            <button.icon /> {button.name}
-                        </button>
-                        </li>
-                    ))}
+                    {buttons.map((button) => {
+                        const isActive = (button.step === 'reports' && pathname === '/reports') || (pathname.startsWith('/tasks') && step === button.step);
+
+                        return (
+                            <li key={button.name}>
+                                <button
+                                    className={`w-full px-8 py-2 flex gap-3 text-xl text-white items-center cursor-pointer 
+                                    ${isActive ? "bg-light-gray/40" : ""} hover:opacity-80`}
+                                    onClick={() => handleNavigation(button.step)}
+                                >
+                                    <button.icon /> {button.name}
+                                </button>
+                            </li>
+                        );
+                    })}
 
                     <li>
                         <button
