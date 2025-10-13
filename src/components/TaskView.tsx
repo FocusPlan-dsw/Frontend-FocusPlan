@@ -32,13 +32,18 @@ export function TaskView({ title, description, completed, estimatedTime, startDa
             <p className="text-xl max-md:text-lg">{description ?? "Atividade sem descrição"}</p>
 
             <div className="flex flex-col gap-7">
-                <div>
-                    <p className="font-light text-xl max-md:text-lg">
+                <div className="flex flex-col gap-5 bg-light-gray border-[0.5px] border-gray02 rounded-[10px] w-full max-w-[47.5rem] max-lg:max-w-full p-5">
+
+                    <p>
                         <span className="text-primary">Prazo estimado: </span>
                         {startDate ? new Date(startDate).toLocaleDateString("pt-BR") : "Atividade sem data de início"} á { dueDate ? new Date(dueDate).toLocaleDateString("pt-BR") : "Atividade sem data de conclusão"}
                     </p>
+                     <p>
+                        <span className="text-primary">Intervalo em que foi feita: </span>
+                        {startDate ? new Date(startDate).toLocaleDateString("pt-BR") : "Atividade sem data de início"} á { dueDate ? new Date(dueDate).toLocaleDateString("pt-BR") : "Atividade sem data de conclusão"}
+                    </p>
                 </div>
-                <div className="flex gap-12 font-light text-xl max-md:text-lg max-md:flex-col max-md:gap-8">
+                <div className="flex flex-col gap-5 bg-light-gray border-[0.5px] border-gray02 rounded-[10px] w-full max-w-[47.5rem] max-lg:max-w-full p-5">
                     <p>
                         <span className="text-primary">Tempo de foco estimado: </span>
                         {estimatedTime ?? "Atividade sem tempo estimado"}
