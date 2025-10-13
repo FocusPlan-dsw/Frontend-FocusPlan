@@ -25,7 +25,10 @@ export function TaskView({ title, description, completed, estimatedTime, startDa
     return (
         <section className="flex flex-col gap-10">
             <div className="flex justify-between items-center">
-                <h1 className="text-primary text-3xl flex items-center gap-5 max-md:text-lg"><ClipboardList size={22} /> {title}</h1>
+                <div className="flex items-start gap-3">
+                    <ClipboardList size={30} className="text-primary"/> 
+                    <h1 className="text-primary text-3xl max-md:text-lg m-0 leading-none">{title}</h1>
+                </div>
                 <span className={`text-sm px-7 py-2 rounded-full max-md:px-5 max-md:text-[12px] whitespace-nowrap ${status.style}`}>{status.label}</span>
             </div>
 
