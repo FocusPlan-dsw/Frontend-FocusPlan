@@ -13,11 +13,11 @@ export function TaskView({ title, description, completed, estimatedTime, startDa
             due.setHours(0, 0, 0, 0);
 
             if (due < today) {
-            return { label: "Atrasada", style: "text-red-500 bg-red-200" };
+            return { label: "Atrasada", style: "text-[#b91c1c] bg-[#fee2e2]" };
             }
         }
 
-        return { label: "Em andamento", style: "text-yellow-500 bg-yellow-200" };
+        return { label: "Em andamento", style: "text-[#b45309] bg-[#fef3c7] " };
     };
 
     const status = getTaskStatus(completed, dueDate);
