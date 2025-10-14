@@ -47,6 +47,19 @@ export function TodayTask() {
     [tasks]
   )
 
+  const isCompletedTaskDue = () => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        return tasks.filter(task => {
+            if (!task.dueDate) return false;
+                const due = new Date(task.dueDate);
+                due.setHours(0, 0, 0, 0);
+
+            return task.completed && due < today;
+        });
+    };
+
   const completedTask = async (id: string) => {
     try {
       await api.patch(`/tasks/${id}/complete`)
@@ -69,7 +82,7 @@ export function TodayTask() {
 
   return (
     <section className="w-full flex flex-col gap-20 pb-10">
-      <h1 className="text-3xl text-primary">Tarefas de hoje</h1>
+      <h1 className="text-3xl text-primary max-md:text-2xl">Tarefas de hoje</h1>
 
       <div className="flex gap-12 w-full max-lg:flex-col max-[1220px]:gap-3">
         <TaskBlock title="Pendentes" value={pendingTasks} />
@@ -114,6 +127,7 @@ export function TodayTask() {
                     new Date().setHours(0, 0, 0, 0)
                 )
               }
+              view={isCompletedTaskDue().includes(task)} 
             />
           ))
         )}

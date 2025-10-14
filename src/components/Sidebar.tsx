@@ -46,10 +46,10 @@ export function Sidebar() {
             )}
 
             <aside
-                className={`fixed top-0 left-0 z-50 bg-gradient h-screen py-14 flex flex-col gap-20 transform transition-transform duration-300
-                ${open ? "translate-x-0" : "-translate-x-full w-[23.1rem]"} lg:translate-x-0`}
+                className={`w-[23.1rem] fixed top-0 left-0 z-50 bg-gradient h-screen py-14 flex flex-col gap-20 transform transition-transform duration-300 max-[1025px]:gap-10
+                ${open ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}
             >
-                <Image src="/sidebar.svg" alt="sidebar" width={210} height={75} className="mx-auto" />
+                <Image src="/sidebar.svg" alt="sidebar" width={210} height={75} className="mx-auto max-md:pt-10" />
 
                 <ul className="flex flex-col gap-[1.5rem] h-full">
                     {buttons.map((button) => {

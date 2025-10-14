@@ -1,4 +1,5 @@
 "use client";
+import { BackButton } from "@/components/BackButton";
 import { TaskView } from "@/components/TaskView";
 import api from "@/lib/api";
 import { TaskCompleted } from "@/types/Task";
@@ -33,7 +34,7 @@ export default function TaskPage() {
 
     return (
         <div>
-            <button className="mb-10 cursor-pointer" onClick={() => router.back()}>Voltar</button>
+            <BackButton />
             {task ? <TaskView {...task} /> : <p>Carregando...</p>}
         </div>
     );
