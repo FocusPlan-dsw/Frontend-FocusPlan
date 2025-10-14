@@ -1,14 +1,16 @@
 import { ChevronRight } from "lucide-react";
+import Link from "next/link";
 
 interface ReportTypeCardProps {
         icon: React.ElementType
         title: string
         description: string
+        link: string
     }
 
-export function ReportTypeCard({ icon: Icon, title, description }: ReportTypeCardProps) {
+export function ReportTypeCard({ icon: Icon, title, description, link }: ReportTypeCardProps) {
     return (
-        <div
+        <Link href={link}
         className="group flex justify-between items-center p-4 sm:p-5 bg-gray01 border border-[#C5C4C4] 
                     rounded-[10px] w-full max-w-[776px] min-h-[110px] cursor-pointer 
                     transition-all duration-300 hover:shadow-lg hover:scale-[1.02] hover:border-primary"
@@ -30,6 +32,6 @@ export function ReportTypeCard({ icon: Icon, title, description }: ReportTypeCar
             className="text-gray02 flex-shrink-0 transition-all duration-300 
                     group-hover:text-primary group-hover:translate-x-1"
         />
-        </div>
+        </Link>
     );
 }
