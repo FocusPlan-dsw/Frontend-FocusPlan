@@ -1,6 +1,6 @@
 type InformationBlockReportsProps = {
         icon?: React.ElementType
-        quantity: string
+        quantity: string | number
         value: string
     }
 

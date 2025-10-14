@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 
 import api from "@/lib/api";
 import { TaskBlock } from "./TaskBlock";
-import { formatSeconds } from "./FormatSeconds";
+import { formatSeconds } from "../utils/FormatSeconds";
 import { TaskForm } from "./TaskForm";
 
 export function AllTasks() {
