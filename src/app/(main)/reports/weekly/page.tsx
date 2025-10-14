@@ -17,7 +17,8 @@ export default function WeeklyReportsPage() {
     "overdueTasks": 0,
     "progressTasks": 0,
     "percentageCompleted": 0,
-    "totalEstimatedTime": 0
+    "totalEstimatedTime": 0,
+    "totalTimeDedicated": 0
   })
 
   useEffect(() => {
@@ -43,7 +44,7 @@ export default function WeeklyReportsPage() {
           <main className="flex flex-col gap-10">
             <p>Nessa semana (de 12 a 18 de outubro) o seu planejamento e horas líquidas de estudo foram coletados e você obteve os seguintes resultados:</p>
             <div className="grid grid-cols-2 gap-10 w-full max-w-[1200px] mx-auto">
-                <InformationBlockReports quantity={formatSeconds(report.totalEstimatedTime)} value="Tempo total percorrido" icon={Clock10}/>
+                <InformationBlockReports quantity={formatSeconds(report.totalTimeDedicated)} value="Tempo total percorrido" icon={Clock10}/>
                 <InformationBlockReports quantity={report.totalTasks} value="Tarefas Planejadas"/>
                 <InformationBlockReports quantity={report.completedTasks} value="Tarefas Concluídas"/>
                 <InformationBlockReports quantity={report.overdueTasks} value="Tarefas Não Concluídas"/>
