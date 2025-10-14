@@ -13,12 +13,12 @@ export default function TasksPage() {
 
   return (
     <>
-        {step === "today" && <TodayTask />}
-        {step === "tomorrow" && <TomorrowTask />}
-        {step === "week" && <WeekTask />}
-        {step === "all" && <AllTasks />}
-        {step === "completed" && <CompletedTask />}
-        {step === "overdue" && <OverdueTask />}
+      {step === "today" && <TodayTask />}
+      {step === "tomorrow" && <TomorrowTask />}
+      {step === "week" && <WeekTask />}
+      {step === "all" && <AllTasks />}
+      {step === "completed" && <CompletedTask />}
+      {step === "overdue" && <OverdueTask />}
     </>
   );
 }

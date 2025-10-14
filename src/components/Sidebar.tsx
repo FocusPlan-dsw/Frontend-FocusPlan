@@ -1,31 +1,27 @@
 import Image from "next/image";
 import { LogOut, MenuIcon, X } from "lucide-react";
 import React, { useState } from "react";
-import { useStep } from "@/context/StepContext";
-import { buttons } from "@/constants/buttonsSidebar";
-import { useRouter, usePathname } from "next/navigation";
+import { buttons, ButtonType } from "@/constants/buttonsSidebar";
+import { useRouter } from "next/navigation";
 import { Step } from "@/types/Step";
 
-export function Sidebar() {
+type SidebarProps = {
+    activeStep: Step;
+    onStepChange: (step: Step) => void;
+};
+
+export function Sidebar({ activeStep, onStepChange }: SidebarProps) {
     const [open, setOpen] = useState(false);
-    const { step, setStep } = useStep();
     const router = useRouter();
-    const pathname = usePathname();
 
     const handleLogout = () => {
         localStorage.removeItem("token");
         router.push("/login");
     };
 
-    const handleNavigation = (buttonStep: Step) => {
-        if (buttonStep === "reports") {
-            router.push("/reports");
-        } else {
-            if (!pathname.startsWith('/tasks')) {
-                router.push("/tasks");
-            }
-            setStep(buttonStep);
-        }
+    const handleNavigation = (button: ButtonType) => {
+        router.push(button.link);
+        onStepChange(button.step);
         setOpen(false);
     };
 
@@ -53,14 +49,14 @@ export function Sidebar() {
 
                 <ul className="flex flex-col gap-[1.5rem] h-full">
                     {buttons.map((button) => {
-                        const isActive = (button.step === 'reports' && pathname === '/reports') || (pathname.startsWith('/tasks') && step === button.step);
+                        const isActive = activeStep === button.step;
 
                         return (
                             <li key={button.name}>
                                 <button
                                     className={`w-full px-8 py-2 flex gap-3 text-xl text-white items-center cursor-pointer 
                                     ${isActive ? "bg-light-gray/40" : ""} hover:opacity-80`}
-                                    onClick={() => handleNavigation(button.step)}
+                                    onClick={() => handleNavigation(button)}
                                 >
                                     <button.icon /> {button.name}
                                 </button>

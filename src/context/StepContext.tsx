@@ -1,3 +1,5 @@
+'use client';
+
 import { Step } from "@/types/Step";
 import { createContext, useContext, useState } from "react";
 
