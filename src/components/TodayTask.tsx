@@ -6,7 +6,7 @@ import { TaskForm } from "./TaskForm"
 import { useRouter } from "next/navigation"
 import { useEffect, useMemo, useState } from "react"
 import { TaskCompleted } from "@/types/Task"
-import { formatSeconds } from "./FormatSeconds"
+import { formatSeconds } from "../utils/FormatSeconds"
 import api from "@/lib/api"
 
 export function TodayTask() {

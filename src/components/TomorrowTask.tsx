@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { TaskForm } from "./TaskForm";
 
 import api from "@/lib/api";
-import { formatSeconds } from "./FormatSeconds";
+import { formatSeconds } from "../utils/FormatSeconds";
 
 export function TomorrowTask() {
     const [tasks, setTasks] = useState<TaskCompleted[]>([]);
