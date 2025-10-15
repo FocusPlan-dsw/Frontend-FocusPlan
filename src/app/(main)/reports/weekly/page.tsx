@@ -7,6 +7,7 @@ import { InformationBlockReports } from "@/components/InformationBlockReports";
 import { Clock10 } from "lucide-react";
 import { formatSeconds } from "@/utils/FormatSeconds";
 import { minutesToHHMM } from "@/utils/ConvertMinutesToHHMM";
+import { formatDate } from "@/utils/FormatDate";
 import api from "@/lib/api";
 
 export default function WeeklyReportsPage() {
@@ -19,7 +20,13 @@ export default function WeeklyReportsPage() {
     "progressTasks": 0,
     "percentageCompleted": 0,
     "totalEstimatedTime": "",
-    "totalTimeDedicated": 0
+    "totalTimeDedicated": 0,
+    period: {
+      currentWeek: {
+        start: null,
+        end: null
+      }
+    }
   })
 
   useEffect(() => {
@@ -43,7 +50,7 @@ export default function WeeklyReportsPage() {
       <div className="flex flex-col gap-10">
           <h1 className="text-3xl text-primary">Relatório Semanal</h1>
           <main className="flex flex-col gap-10">
-            <p>Nessa semana (de 12 a 18 de outubro) o seu planejamento e horas líquidas de estudo foram coletados e você obteve os seguintes resultados:</p>
+            <p>Nessa semana de {formatDate(report.period?.currentWeek?.start)} a {formatDate(report.period?.currentWeek?.end)} o seu planejamento e horas líquidas de estudo foram coletados e você obteve os seguintes resultados:</p>
             <div className="flex flex-wrap gap-x-5 gap-y-10 w-full max-w-[1200px] mx-auto mb-15 items-start">
               <InformationBlockReports quantity={minutesToHHMM(report.totalEstimatedTime)} value="Tempo total estimado" icon={Clock10}/>
                 <InformationBlockReports quantity={formatSeconds(report.totalTimeDedicated)} value="Tempo total percorrido" icon={Clock10}/>
