@@ -6,6 +6,7 @@ import { BackButton } from "@/components/BackButton";
 import { InformationBlockReports } from "@/components/InformationBlockReports";
 import { Clock10 } from "lucide-react";
 import { formatSeconds } from "@/utils/FormatSeconds";
+import { minutesToHHMM } from "@/utils/ConvertMinutesToHHMM";
 import api from "@/lib/api";
 
 export default function WeeklyReportsPage() {
@@ -17,7 +18,7 @@ export default function WeeklyReportsPage() {
     "overdueTasks": 0,
     "progressTasks": 0,
     "percentageCompleted": 0,
-    "totalEstimatedTime": 0,
+    "totalEstimatedTime": "",
     "totalTimeDedicated": 0
   })
 
@@ -43,8 +44,8 @@ export default function WeeklyReportsPage() {
           <h1 className="text-3xl text-primary">Relatório Semanal</h1>
           <main className="flex flex-col gap-10">
             <p>Nessa semana (de 12 a 18 de outubro) o seu planejamento e horas líquidas de estudo foram coletados e você obteve os seguintes resultados:</p>
-            <div className="grid grid-cols-2 gap-10 w-full max-w-[1200px] mx-auto mb-15">
-              <InformationBlockReports quantity={formatSeconds(report.totalEstimatedTime)} value="Tempo total estimado" icon={Clock10}/>
+            <div className="flex flex-wrap gap-x-5 gap-y-10 w-full max-w-[1200px] mx-auto mb-15 items-start">
+              <InformationBlockReports quantity={minutesToHHMM(report.totalEstimatedTime)} value="Tempo total estimado" icon={Clock10}/>
                 <InformationBlockReports quantity={formatSeconds(report.totalTimeDedicated)} value="Tempo total percorrido" icon={Clock10}/>
                 <InformationBlockReports quantity={`${report.progressTasks} %`} value="Tarefas Concluídas"/>
                 <InformationBlockReports quantity={report.totalTasks} value="Tarefas Planejadas"/>
