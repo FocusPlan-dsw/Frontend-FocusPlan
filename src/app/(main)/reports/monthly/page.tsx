@@ -73,7 +73,7 @@ export default function WeeklyReportsPage() {
             <div className="flex flex-wrap gap-x-5 gap-y-10 w-full max-w-[1200px] mx-auto mb-15 items-start">
               <InformationBlockReports quantity={minutesToHHMM(report.totalEstimatedTime)} value="Tempo total estimado" icon={Clock10}/>
                 <InformationBlockReports quantity={formatSeconds(report.totalTimeDedicated)} value="Tempo total percorrido" icon={Clock10}/>
-                <InformationBlockReports quantity={`${report.progressTasks}%`} value="Tarefas Concluídas"/>
+                <InformationBlockReports quantity={`${report.percentageCompleted}%`} value="Tarefas Concluídas"/>
                 <InformationBlockReports quantity={report.totalTasks} value="Tarefas Planejadas"/>
                 <InformationBlockReports quantity={report.completedTasks} value="Tarefas Concluídas"/>
                 <InformationBlockReports quantity={report.overdueTasks} value="Tarefas Não Concluídas"/>
