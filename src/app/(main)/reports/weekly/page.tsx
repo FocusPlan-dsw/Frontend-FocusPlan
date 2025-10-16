@@ -9,6 +9,7 @@ import { formatSeconds } from "@/utils/FormatSeconds";
 import { minutesToHHMM } from "@/utils/ConvertMinutesToHHMM";
 import { formatDate } from "@/utils/FormatDate";
 import api from "@/lib/api";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function WeeklyReportsPage() {
   const { setStep } = useStep();
@@ -50,6 +51,15 @@ export default function WeeklyReportsPage() {
       <div className="flex flex-col gap-10">
           <h1 className="text-3xl text-primary">Relatório Semanal</h1>
           <main className="flex flex-col gap-10">
+            <Select>
+              <SelectTrigger label="Semana" className="w-[200px]">
+                <SelectValue placeholder="Selecione a semana" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="thisWeek">Essa semana</SelectItem>
+                <SelectItem value="previousWeek">Semana passada</SelectItem>
+              </SelectContent>
+            </Select>
             <p>Nessa semana de {formatDate(report.period?.currentWeek?.start)} a {formatDate(report.period?.currentWeek?.end)} o seu planejamento e horas líquidas de estudo foram coletados e você obteve os seguintes resultados:</p>
             <div className="flex flex-wrap gap-x-5 gap-y-10 w-full max-w-[1200px] mx-auto mb-15 items-start">
               <InformationBlockReports quantity={minutesToHHMM(report.totalEstimatedTime)} value="Tempo total estimado" icon={Clock10}/>
