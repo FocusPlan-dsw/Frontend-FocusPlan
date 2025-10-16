@@ -49,9 +49,11 @@ export default function Login() {
             const response = await api.post("/auth/login", {
                 email: data.email,
                 password: data.password
+            }, {
+                withCredentials: true
             })
 
-            localStorage.setItem("token", response.data);
+            localStorage.setItem("accessToken", response.data.accessToken);
             toast.success('Usuário logado com sucesso!')
 
             setTimeout(() => {    

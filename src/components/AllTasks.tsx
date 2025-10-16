@@ -91,7 +91,7 @@ export function AllTasks() {
 
             <div className="flex items-center w-full max-w-[580px] gap-9 ">
                 <div  className="flex-1">
-                    <Input placeholder="Pesquisar tarefa" icon={Search } value={search} onChange={(e) => setSearch(e.target.value)} />
+                    <Input placeholder="Pesquisar tarefa" icon={Search} value={search} onChange={(e) => setSearch(e.target.value)} />
                 </div>
 
                 <TaskForm getTasks={() => Promise.all([getAllTasks(), getTimeDedicated()])} />
