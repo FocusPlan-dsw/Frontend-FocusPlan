@@ -5,7 +5,6 @@ import React, { useState } from "react";
 import { useStep } from "@/context/StepContext";
 import { buttons } from "@/constants/buttonsSidebar";
 import { useRouter } from "next/navigation";
-import { set } from "zod";
 
 export function Sidebar() {
     const [open, setOpen] = useState(false);
@@ -39,7 +38,7 @@ export function Sidebar() {
                 className={`w-[23.1rem] fixed top-0 left-0 z-50 bg-gradient h-screen py-14 flex flex-col gap-20 transform transition-transform duration-300 max-[1025px]:gap-10
                 ${open ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}
             >
-                <Image src="/sidebar.svg" alt="sidebar" width={210} height={75} className="mx-auto max-md:pt-10" />
+                <Image src="/sidebar.svg" alt="sidebar" width={210} height={75} className="mx-auto max-md:pt-10" priority />
 
                 <ul className="flex flex-col gap-[1.5rem] h-full max-[1025px]:gap-[0.8rem]">
                     {buttons.map((button) => (
