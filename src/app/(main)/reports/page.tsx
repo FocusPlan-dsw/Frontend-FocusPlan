@@ -17,7 +17,7 @@ export default function ReportsPage() {
       <h1 className="text-3xl text-primary">Relatórios</h1>
       <ReportTypeCard icon={RefreshCw} title="Semanal" description="Visualize seus resultados durante a semana" link="/reports/weekly" />
       <ReportTypeCard icon={CalendarSync} title="Mensal" description="Visualize seus resultados a cada mês" link="/reports/monthly" />
-      <ReportTypeCard icon={Zap} title="Anual" description="Visualize seus resultados a cada ano" link="/"/>
+      <ReportTypeCard icon={Zap} title="Anual" description="Visualize seus resultados a cada ano" link="/reports/yearly" />
     </div>
   );
 }
