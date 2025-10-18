@@ -15,7 +15,7 @@ export function Sidebar({ activeStep, onStepChange }: SidebarProps) {
     const router = useRouter();
 
     const handleLogout = () => {
-        localStorage.removeItem("token");
+        localStorage.removeItem("accessToken");
         router.push("/login");
     };
 
