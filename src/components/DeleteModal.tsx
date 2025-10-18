@@ -33,7 +33,7 @@ export function DeleteModal({ id, getTasks, setOpenModalCancel }: DeleteModalPro
                 </button>
 
                 <div className="w-full flex flex-col items-center gap-6">
-                    <div className="w-[85px] h-[85px] flex flex-col items-center justify-center bg-red1 rounded-full">
+                    <div className="w-[85px] h-[85px] flex flex-col items-center justify-center bg-red-200 rounded-full">
                         <Trash2 />
                     </div>
 
@@ -44,7 +44,7 @@ export function DeleteModal({ id, getTasks, setOpenModalCancel }: DeleteModalPro
 
                 <div className="grid grid-flow-col grid-cols-2 gap-[19px] mt-[60px]">
                     <Button size="lg" onClick={() => deleteTask(id)}>Deletar</Button>
-                    <Button size="lg" onClick={() => setOpenModalCancel(false)}>Cancelar</Button>
+                    <Button size="lg" className="bg-white text-primary border border-primary" onClick={() => setOpenModalCancel(false)}>Cancelar</Button>
                 </div>
             </div>
         </div>
