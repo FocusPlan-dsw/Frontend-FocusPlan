@@ -30,7 +30,7 @@ export function AllTasks() {
     const getTimeDedicated = async () => {
         try {
             const response = await api.get("/tasks/summary/time-dedicated")
-            const formattedTime = formatSeconds(response.data.today)
+            const formattedTime = formatSeconds(response.data.allTime)
             setTimeDedicated(formattedTime)
         } catch (error) {
             console.error("Erro ao buscar tempo dedicado:", error)

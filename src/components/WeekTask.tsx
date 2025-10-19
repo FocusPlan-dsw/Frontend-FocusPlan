@@ -36,7 +36,8 @@ export function WeekTask() {
     const getTimeDedicated = async () => {
         try {
             const response = await api.get("/tasks/summary/time-dedicated")
-            const formattedTime = formatSeconds(response.data.today)
+            console.log(response.data)
+            const formattedTime = formatSeconds(response.data.thisWeek)
             setTimeDedicated(formattedTime)
         } catch (error) {
             console.error("Erro ao buscar tempo dedicado:", error)

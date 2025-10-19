@@ -3,14 +3,13 @@ import { BackButton } from "@/components/BackButton";
 import { TaskView } from "@/components/TaskView";
 import api from "@/lib/api";
 import { TaskCompleted } from "@/types/Task";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 export default function TaskPage() {
     const [task, setTask] = useState<TaskCompleted>();
 
-    const router = useRouter();
     const params = useParams();
 
     const { id } = params;

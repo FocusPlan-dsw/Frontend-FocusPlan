@@ -178,7 +178,7 @@ export function TaskForm({ defaultValues, getTasks }: TaskFormProps) {
                                                 data-slot="textarea"
                                                 placeholder="Descreva a atividade"
                                                 className={cn(
-                                                    "placeholder:text-gray02 placeholder:text-[13px] dark:bg-input/30 border border-gray04 w-full min-w-0 rounded-[6px] bg-transparent py-2 px-3 text-base transition-color outline-none resize-none h-[6rem] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                                                    "placeholder:text-gray02 focus-visible:border-primary placeholder:text-[13px] dark:bg-input/30 border border-gray04 w-full min-w-0 rounded-[6px] bg-transparent py-2 px-3 text-base transition-color outline-none resize-none h-[6rem] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                                                 )}
                                                 {...field}
                                             />
