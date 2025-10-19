@@ -53,8 +53,8 @@ export default function StopWatchPage() {
     const [timerMode, setTimerMode] = useState<TimerMode>('pomodoro');
     const [dedicatedTime, setDedicatedTime] = useState(0);
     const [pomodoroState, setPomodoroState] = useState<PomodoroState>('idle');
-    const [focusTime, setFocusTime] = useState('00:25:00');
-    const [breakTime, setBreakTime] = useState('00:05:00');
+    const [focusTime, setFocusTime] = useState('00:25');
+    const [breakTime, setBreakTime] = useState('00:05');
     const [tempFocusTime, setTempFocusTime] = useState(focusTime);
     const [tempBreakTime, setTempBreakTime] = useState(breakTime);
 
