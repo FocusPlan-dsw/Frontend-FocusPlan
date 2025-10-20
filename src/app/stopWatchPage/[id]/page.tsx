@@ -16,6 +16,7 @@ import { showNotification } from "@/lib/notification";
 
 import { TaskCompleted } from "@/types/Task";
 import api from "@/lib/api";
+import { parse } from "path";
 
 type TimerMode = 'stopwatch' | 'pomodoro';
 type PomodoroState = 'idle' | 'focusing' | 'break' | 'focus_ended';
@@ -109,6 +110,11 @@ export default function StopWatchPage() {
     };
     const handleTimerExpire = () => {
         if (pomodoroState === 'focusing') {
+            const elapsedSeconds = parseTimeToSeconds(focusTime);
+            if (elapsedSeconds > 0) {
+                handleTimeSubmit(elapsedSeconds);
+            }
+            
             showNotification('Foco Concluído!', 'Hora de fazer uma pausa.');
             setPomodoroState('focus_ended');
         } else if (pomodoroState === 'break') {

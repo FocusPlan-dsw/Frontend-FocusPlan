@@ -11,6 +11,7 @@ export function Chronometer({ onTimeSubmit }: ChronometerProps) {
     const {
         seconds,
         minutes,
+        hours,
         isRunning,
         start,
         pause,
@@ -19,8 +20,10 @@ export function Chronometer({ onTimeSubmit }: ChronometerProps) {
 
     const isPaused = !isRunning && (minutes > 0 || seconds > 0);
 
+    const totalMinutes = (hours * 60) + minutes;
+
     const handleReset = () => {
-        const elapsedSeconds = (minutes * 60) + seconds;
+        const elapsedSeconds = (totalMinutes * 60) + seconds;
         
         if (elapsedSeconds > 0) {
             onTimeSubmit(Math.round(elapsedSeconds));
@@ -31,7 +34,7 @@ export function Chronometer({ onTimeSubmit }: ChronometerProps) {
 
     return (
         <TimerDisplay
-            minutes={minutes}
+            minutes={totalMinutes}
             seconds={seconds}
             isRunning={isRunning}
             isPaused={isPaused}
