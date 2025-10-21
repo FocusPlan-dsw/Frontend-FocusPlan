@@ -32,6 +32,15 @@ export function OverdueTask() {
         }
     }
 
+    const completedTask = async (id: string) => {
+        try {
+            await api.patch(`/tasks/${id}/complete`)
+            await Promise.all([overdueTasks()])
+        } catch (error) {
+            console.error("Erro ao marcar tarefa como concluída:", error)
+        }
+    }
+
     const filteredTasks = search ? tasks.filter((task) => task.title.toLocaleLowerCase().includes(search.toLocaleLowerCase())) : tasks;
 
     useEffect(() => {
@@ -57,9 +66,9 @@ export function OverdueTask() {
                     filteredTasks.map((task) => (
                         <Task 
                             key={task.id}
-                            title={task.title} 
                             onClick={() => router.push(`/tasks/${task.id}`)}
-                            isOverdueTask
+                            getTasks={overdueTasks}
+                            completedTask={completedTask}
                             task={task}
                         />
                     ))

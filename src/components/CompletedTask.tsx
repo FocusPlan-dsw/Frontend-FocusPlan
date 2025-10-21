@@ -23,6 +23,15 @@ export function CompletedTask() {
         }
     }
 
+    const completedTask = async (id: string) => {
+        try {
+            await api.patch(`/tasks/${id}/complete`)
+            await Promise.all([completedTasks()])
+        } catch (error) {
+            console.error("Erro ao marcar tarefa como concluída:", error)
+        }
+    }
+
     useEffect(() => {
         completedTasks();
     }, []);
@@ -48,10 +57,9 @@ export function CompletedTask() {
                     filteredTasks.map((task) => (
                         <Task 
                             key={task.id}
-                            title={task.title} 
                             onClick={() => router.push(`/tasks/${task.id}`)}
-                            view
-                            isCompletedTask
+                            getTasks={completedTasks}
+                            completedTask={completedTask}
                             task={task}
                         />
                     ))

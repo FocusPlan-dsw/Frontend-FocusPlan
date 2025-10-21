@@ -35,11 +35,11 @@ export function TomorrowTask() {
 
     const getTimeDedicated = async () => {
         try {
-        const response = await api.get("/tasks/summary/time-dedicated")
-        const formattedTime = formatSeconds(response.data.tomorrow)
-        setTimeDedicated(formattedTime)
+            const response = await api.get("/tasks/summary/time-dedicated")
+            const formattedTime = formatSeconds(response.data.tomorrow)
+            setTimeDedicated(formattedTime)
         } catch (error) {
-        console.error("Erro ao buscar tempo dedicado:", error)
+            console.error("Erro ao buscar tempo dedicado:", error)
         }
     }
 
@@ -69,6 +69,8 @@ export function TomorrowTask() {
 
     const filteredTasks = search ? tasks.filter((task) => task.title.toLocaleLowerCase().includes(search.toLocaleLowerCase())) : tasks;
 
+    const filteredTasksPending = filteredTasks.filter((task) => !task.completed);
+
     return (
         <section className="w-full flex flex-col gap-20 pb-10">
             <h1 className="text-3xl text-primary max-md:text-2xl">Tarefas de amanhã</h1>
@@ -87,12 +89,12 @@ export function TomorrowTask() {
             </div>
 
             <div className="flex flex-col gap-12">
-                {filteredTasks.length === 0 ? (
+                {filteredTasksPending.length === 0 ? (
                     <p className="text-center text-gray-500 mt-4">
                         Nenhuma tarefa encontrada.
                     </p>
                     ) : (
-                    filteredTasks.map((task) => (
+                    filteredTasksPending.map((task) => (
                         <Task 
                             key={task.id} 
                             getTasks={() => Promise.all([getTomorrowTasks(), getTimeDedicated()])}

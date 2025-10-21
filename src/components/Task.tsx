@@ -5,7 +5,6 @@ import { DeleteModal } from "./DeleteModal";
 import { TaskCompleted } from "@/types/Task";
 import { minutesToHHMM } from "@/utils/ConvertMinutesToHHMM";
 import Link from "next/link";
-import { is } from "date-fns/locale";
 
 interface TaskProps {
     task: TaskCompleted

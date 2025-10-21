@@ -67,6 +67,8 @@ export function TodayTask() {
       )
     : tasks
 
+  const filteredTasksPending = filteredTasks.filter((task) => !task.completed);
+
   return (
     <section className="w-full flex flex-col gap-20 pb-10">
       <h1 className="text-3xl text-primary max-md:text-2xl">Tarefas de hoje</h1>
@@ -92,12 +94,12 @@ export function TodayTask() {
       </div>
 
       <div className="flex flex-col gap-12">
-        {filteredTasks.length === 0 ? (
+        {filteredTasksPending.length === 0 ? (
           <p className="text-center text-gray-500 mt-4">
             Nenhuma tarefa encontrada.
           </p>
         ) : (
-          filteredTasks.map((task) => (
+          filteredTasksPending.map((task) => (
             <Task
               key={task.id}
               getTasks={() => Promise.all([getTodayTasks(), getTimeDedicated()])}

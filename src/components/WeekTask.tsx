@@ -69,6 +69,7 @@ export function WeekTask() {
     }, []);
 
     const filteredTasks = search ? tasks.filter((task) => task.title.toLocaleLowerCase().includes(search.toLocaleLowerCase())) : tasks;
+    const filteredTasksPending = filteredTasks.filter((task) => !task.completed);
 
     return (
         <section className="w-full flex flex-col gap-20 pb-10">
@@ -88,12 +89,12 @@ export function WeekTask() {
             </div>
 
             <div className="flex flex-col gap-12">
-                {filteredTasks.length === 0 ? (
+                {filteredTasksPending.length === 0 ? (
                     <p className="text-center text-gray-500 mt-4">
                         Nenhuma tarefa encontrada.
                     </p>
                     ) : (
-                    filteredTasks.map((task) => (
+                    filteredTasksPending.map((task) => (
                         <Task 
                             key={task.id} 
                             getTasks={() => Promise.all([getWeekTasks(), getTimeDedicated()])}
