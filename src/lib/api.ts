@@ -6,13 +6,18 @@ const api = axios.create({
     withCredentials: true
 })
 
+interface DecodedToken {
+    exp: number;
+    [key: string]: unknown;
+}
+
 let isRefreshing = false;
 let failedQueue: Array<{
     resolve: (token: string) => void;
-    reject: (error: any) => void;
+    reject: (error: unknown) => void;
 }> = [];
 
-const processQueue = (error: any = null, token: string | null = null) => {
+const processQueue = (error: unknown = null, token: string | null = null) => {
     failedQueue.forEach(prom => {
         if (error) {
             prom.reject(error);
@@ -25,7 +30,7 @@ const processQueue = (error: any = null, token: string | null = null) => {
 
 const isTokenExpiringSoon = (token: string): boolean => {
     try {
-        const decoded: any = jwtDecode(token);
+        const decoded = jwtDecode<DecodedToken>(token);
         const expiresIn = decoded.exp * 1000 - Date.now();
         return expiresIn < 5000;
     } catch {

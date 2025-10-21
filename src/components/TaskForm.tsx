@@ -71,7 +71,7 @@ export function TaskForm({ defaultValues, getTasks, isOverdueTask }: TaskFormPro
             
             form.reset(valuesToSet);
         }
-    }, [defaultValues, form.reset]);
+    }, [defaultValues, form]);
 
     const maskEstimatedTime = (value: string) => {
         let v = value.replace(/\D/g, "")
@@ -97,7 +97,9 @@ export function TaskForm({ defaultValues, getTasks, isOverdueTask }: TaskFormPro
             setOpen(false);
             toast.success('Tarefa criada com sucesso!')
 
-            getTasks && getTasks();
+            if (getTasks) {
+                getTasks();
+            }
 
         } catch (error) {
             console.log(error)
@@ -118,7 +120,9 @@ export function TaskForm({ defaultValues, getTasks, isOverdueTask }: TaskFormPro
             setOpen(false);
             toast.success('Tarefa atualizada com sucesso!')
 
-            getTasks && getTasks();
+            if (getTasks) {
+                getTasks();
+            }
     
             } catch (error) {
                 console.log(error)

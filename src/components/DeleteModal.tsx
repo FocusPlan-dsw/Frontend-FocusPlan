@@ -1,4 +1,3 @@
-import { useParams } from "next/navigation";
 import { Button } from "./ui/button";
 
 import { X, Trash2 } from "lucide-react";
@@ -18,10 +17,16 @@ export function DeleteModal({ id, getTasks, setOpenModalCancel }: DeleteModalPro
             setOpenModalCancel(false);
             toast.success("Tarefa deletada com sucesso!");
 
-            getTasks && getTasks();
+            if (getTasks) {
+                getTasks();
+            }
 
         } catch (error) {
-            toast.error("Erro ao deletar tarefa");
+            if (error instanceof Error) {
+                toast.error(`Erro ao deletar tarefa: ${error.message}`);
+            } else {
+                toast.error("Erro ao deletar tarefa");
+            }
         }
     }
 

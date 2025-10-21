@@ -20,7 +20,11 @@ export default function TaskPage() {
             setTask(response.data)
 
         } catch (error) {
-            toast.error("Erro ao buscar tarefa");
+            if (error instanceof Error) {
+                toast.error(`Erro ao buscar tarefa: ${error.message}`);
+            } else {
+                toast.error("Erro ao buscar tarefa");
+            }
         }
     }
     
