@@ -26,6 +26,7 @@ import { toast } from "react-toastify"
 import { useEffect, useState } from "react"
 import { TaskP } from "@/types/Task"
 import { convertEstimatedTimeToMinutes } from "@/utils/ConvertEstimatedTimeToMinutes"
+import { Spin } from "./Spin"
 
 const createTaskSchema = z.object({
   title: z.string().refine((title) => !!title, {
@@ -60,6 +61,7 @@ export function TaskForm({ defaultValues, getTasks, isOverdueTask }: TaskFormPro
     })
 
     const [open, setOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         if (defaultValues) {
@@ -71,7 +73,7 @@ export function TaskForm({ defaultValues, getTasks, isOverdueTask }: TaskFormPro
             
             form.reset(valuesToSet);
         }
-    }, [defaultValues, form.reset]);
+    }, [defaultValues, form]);
 
     const maskEstimatedTime = (value: string) => {
         let v = value.replace(/\D/g, "")
@@ -97,11 +99,16 @@ export function TaskForm({ defaultValues, getTasks, isOverdueTask }: TaskFormPro
             setOpen(false);
             toast.success('Tarefa criada com sucesso!')
 
-            getTasks && getTasks();
+            if (getTasks) {
+                getTasks();
+            }
 
         } catch (error) {
             console.log(error)
             toast.error('Erro ao criar tarefa!')
+
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -118,20 +125,26 @@ export function TaskForm({ defaultValues, getTasks, isOverdueTask }: TaskFormPro
             setOpen(false);
             toast.success('Tarefa atualizada com sucesso!')
 
-            getTasks && getTasks();
+            if (getTasks) {
+                getTasks();
+            }
     
             } catch (error) {
                 console.log(error)
                 toast.error('Erro ao atualizar tarefa!')
-        }
+
+            } finally {
+                setLoading(false);
+            }
     }
 
     const onSubmit = (data: z.infer<typeof createTaskSchema>) => {
-        if (defaultValues?.id) {
-            updateTask({ id: defaultValues.id, ...data });
+        setLoading(true);
+
+        if (defaultValues) {
+            updateTask({ ...data, id: defaultValues.id! });
         } else {
             createTask(data);
-            form.reset()
         }
     };
 
@@ -211,7 +224,18 @@ export function TaskForm({ defaultValues, getTasks, isOverdueTask }: TaskFormPro
                                                                 </Button>
                                                             </PopoverTrigger>
                                                             <PopoverContent className="w-auto p-0">
-                                                                <Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))} />
+                                                                <Calendar mode="single" selected={field.value} disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))} onSelect={(date) => {
+                                                                    const dueDate = form.getValues("dueDate");
+                                                            
+                                                                    if (dueDate && date && date > dueDate) {
+                                                                        const newDate = new Date(dueDate);
+                                                                        newDate.setDate(newDate.getDate() - 1);
+                                                                        form.setValue("startDate", newDate)
+
+                                                                    } else {
+                                                                        field.onChange(date)
+                                                                    }
+                                                                }} />
                                                             </PopoverContent>
                                                         </Popover>
                                                     </FormControl>
@@ -304,7 +328,7 @@ export function TaskForm({ defaultValues, getTasks, isOverdueTask }: TaskFormPro
                                 }}
                             />
                             
-                            <Button type="submit" size="sm">{defaultValues ? "Salvar" : "Criar"}</Button>
+                            <Button type="submit" size="sm" disabled={loading}>{loading ? <Spin /> : (defaultValues ? "Salvar" : "Criar")}</Button>
                         </div>
                     </form>
                 </Form>

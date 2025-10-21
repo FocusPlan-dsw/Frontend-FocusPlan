@@ -16,7 +16,7 @@ import { showNotification } from "@/lib/notification";
 
 import { TaskCompleted } from "@/types/Task";
 import api from "@/lib/api";
-import { parse } from "path";
+import Image from "next/image";
 
 type TimerMode = 'stopwatch' | 'pomodoro';
 type PomodoroState = 'idle' | 'focusing' | 'break' | 'focus_ended';
@@ -137,7 +137,7 @@ export default function StopWatchPage() {
         <section className="w-full min-h-screen flex flex-col justify-center items-center p-4 bg-gradient-transparent">
             <div className="flex flex-col w-full items-center gap-10 max-lg:gap-8 max-w-3xl">
                 <div className="w-full flex flex-col items-center gap-12 sm:gap-8 md:gap-12">
-                    <img src="/white-logo.svg" alt="logo branca" className="w-48 md:w-64" />
+                    <Image src="/white-logo.svg" alt="logo branca" width={256} height={64} className="w-48 md:w-64" />
                     
                     <div className="flex items-center w-full max-w-md py-3 px-4 border border-[#9C9C9C] rounded-[9px] bg-[#F5F5F5] gap-3">
                         <Logs className="flex-shrink-0 h-4 w-4 text-gray-600" />

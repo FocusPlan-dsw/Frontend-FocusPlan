@@ -33,7 +33,12 @@ export function EnterCode( { email, onCodeVerified, onCodeEntered }: EnterCodePr
             }
 
         } catch (error) {
-            toast.error("Código inválido")
+            if (error instanceof Error) {
+                toast.error(`Código inválido: ${error.message}`);
+            } else {
+                toast.error("Código inválido");
+            }
+
         } finally {
             setLoading(false);
         }
@@ -54,8 +59,11 @@ export function EnterCode( { email, onCodeVerified, onCodeEntered }: EnterCodePr
             }
 
         } catch (error) {
-            toast.error("Erro inesperado")
-
+            if (error instanceof Error) {
+                toast.error(`Erro inesperado: ${error.message}`);
+            } else {
+                toast.error("Erro inesperado");
+            }
         } 
     }
 
