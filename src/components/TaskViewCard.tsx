@@ -1,9 +1,10 @@
+import { formatSeconds } from '@/utils/FormatSeconds';
 import React from 'react';
 
 interface TaskViewCardProps {
   title: string;
   icon: React.ElementType;
-  estimatedTime?: string;
+  estimatedTime?: number;
   timeDedicated?: number;
   startDate?: Date | string | number;
   dueDate?: Date | string | number;
@@ -39,12 +40,19 @@ export function TaskViewCard({
   
   const startDateFormatted = formatDate(type === 'planned' ? startDate : actualStartDate);
   const dueDateFormatted = formatDate(type === 'planned' ? dueDate : actualEndDate);
-  const timeValue = type === 'planned' ? estimatedTime : timeDedicated;
+  
+  let formattedTimeValue: string; 
+
+  if (type === 'planned') {
+    const totalSeconds = estimatedTime ? estimatedTime * 60 : undefined;
+    formattedTimeValue = formatSeconds(totalSeconds); //
+
+  } else {
+    formattedTimeValue = formatSeconds(timeDedicated); //
+  }
 
   const isPlanned = type === 'planned';
-
   const periodLabel = isPlanned ? 'Período planejado:' : 'Período executado:';
-
   const timeLabel = isPlanned ? 'Tempo estimado:' : 'Tempo focado:';
 
   return (
@@ -71,8 +79,7 @@ export function TaskViewCard({
             {timeLabel}
           </span>
           <span className="text-slate-800">
-            {timeValue || 'Não definido'}
-            {timeValue &&  timeValue ? ' min' : ''}
+            {formattedTimeValue}
           </span>
         </div>
       </div>

@@ -3,15 +3,14 @@ export type TaskP = {
   description?: string;
   startDate?: Date;
   dueDate?: Date;
-  estimatedTime?: string;
+  estimatedTime?: number;
 };
 
 export type TaskCompleted = TaskP & {
   id: string;
   completed: boolean;
-  timeDedicated?: number;
+  estimatedTime?: number;
   actualStartDate?: Date;
-  actualEndDate?: Date;
-  
-  elapsedTime?: string;
+  actualEndDate?: Date; 
+  timeDedicated?: number;
 };
