@@ -11,7 +11,7 @@ export function TaskView({
   dueDate,
   actualStartDate,
   actualEndDate,
-  elapsedTime
+  timeDedicated
 }: TaskCompleted) {
   
   const getTaskStatus = (completed: boolean, dueDate?: Date) => {
@@ -64,7 +64,7 @@ export function TaskView({
         type="executed"
         actualStartDate={actualStartDate}
         actualEndDate={actualEndDate}
-        elapsedTime={elapsedTime}
+        timeDedicated={timeDedicated}
       />
     </section>
   )

@@ -4,7 +4,7 @@ interface TaskViewCardProps {
   title: string;
   icon: React.ElementType;
   estimatedTime?: string;
-  elapsedTime?: string;
+  timeDedicated?: number;
   startDate?: Date | string | number;
   dueDate?: Date | string | number;
   actualStartDate?: Date | string | number;
@@ -27,7 +27,7 @@ export function TaskViewCard({
   title,
   icon,
   estimatedTime,
-  elapsedTime,
+  timeDedicated,
   startDate,
   dueDate,
   actualStartDate,
@@ -39,7 +39,7 @@ export function TaskViewCard({
   
   const startDateFormatted = formatDate(type === 'planned' ? startDate : actualStartDate);
   const dueDateFormatted = formatDate(type === 'planned' ? dueDate : actualEndDate);
-  const timeValue = type === 'planned' ? estimatedTime : elapsedTime;
+  const timeValue = type === 'planned' ? estimatedTime : timeDedicated;
 
   const isPlanned = type === 'planned';
 
@@ -72,7 +72,7 @@ export function TaskViewCard({
           </span>
           <span className="text-slate-800">
             {timeValue || 'Não definido'}
-            {timeValue && /^\d+$/.test(timeValue) ? ' min' : ''}
+            {timeValue &&  timeValue ? ' min' : ''}
           </span>
         </div>
       </div>
