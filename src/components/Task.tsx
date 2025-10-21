@@ -51,7 +51,7 @@ export function Task({ task, getTasks, completedTask }: TaskProps) {
 
                 
                 <div className="flex items-center justify-center gap-5">
-                    <button onClick={() => completedTask && completedTask(task.id)} title="Concluir" type="button" className="cursor-pointer"><Check className="w-5 h-5" /></button>
+                    <button onClick={() => completedTask && completedTask(task.id)} title={task.completed ? "Desmarcar como concluída" : "Marcar como concluída"} type="button" className="cursor-pointer"><Check className="w-5 h-5" /></button>
                     
                     <TaskForm defaultValues={{ ...task, estimatedTime: task?.estimatedTime ? minutesToHHMM(task.estimatedTime) : "00:00" }} getTasks={getTasks} isOverdueTask={isOverdue} />
                     
