@@ -229,7 +229,7 @@ export function TaskForm({ defaultValues, getTasks, isOverdueTask }: TaskFormPro
                                                             
                                                                     if (dueDate && date && date > dueDate) {
                                                                         const newDate = new Date(dueDate);
-                                                                        newDate.setDate(newDate.getDate() - 1);
+                                                                        newDate.setDate(newDate.getDate());
                                                                         form.setValue("startDate", newDate)
 
                                                                     } else {
@@ -267,7 +267,7 @@ export function TaskForm({ defaultValues, getTasks, isOverdueTask }: TaskFormPro
                                                             
                                                                     if (startDate && date && date < startDate) {
                                                                         const newDate = new Date(startDate);
-                                                                        newDate.setDate(newDate.getDate() + 1);
+                                                                        newDate.setDate(newDate.getDate());
                                                                         form.setValue("dueDate", newDate)
 
                                                                     } else {
