@@ -2,7 +2,7 @@ import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
 const api = axios.create({
-    baseURL: "http://localhost:3001",
+    baseURL: process.env.NEXT_PUBLIC_API_URL,
     withCredentials: true
 })
 
@@ -49,7 +49,7 @@ const refreshTokenProactively = async (): Promise<string | null> => {
     
     try {
         const refreshApi = axios.create({
-            baseURL: "http://localhost:3001",
+            baseURL: process.env.NEXT_PUBLIC_API_URL,
             withCredentials: true
         });
         
@@ -119,7 +119,7 @@ api.interceptors.response.use(
 
             try {
                 const refreshApi = axios.create({
-                    baseURL: "http://localhost:3001",
+                    baseURL: process.env.NEXT_PUBLIC_API_URL,
                     withCredentials: true
                 });
                 
