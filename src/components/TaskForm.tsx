@@ -44,9 +44,10 @@ const createTaskSchema = z.object({
 interface TaskFormProps {
   defaultValues?: z.infer<typeof createTaskSchema> & { id?: string }
   getTasks?: () => void
+  isOverdueTask?: boolean
 }
 
-export function TaskForm({ defaultValues, getTasks }: TaskFormProps) {
+export function TaskForm({ defaultValues, getTasks, isOverdueTask }: TaskFormProps) {
       const form = useForm<z.infer<typeof createTaskSchema>>({
         resolver: zodResolver(createTaskSchema),
         defaultValues: {
@@ -187,75 +188,77 @@ export function TaskForm({ defaultValues, getTasks }: TaskFormProps) {
                                 )}
                             />
 
-                            <div className="flex flex-col gap-4">
-                                <p className="text-[14px] font-medium text-dark-gray">Prazo estimado</p>
-                                <div className="flex gap-6 max-md:flex-col">
-                                    <FormField
-                                        control={form.control}
-                                        name="startDate"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel className="text-primary text-[11px] font-normal">Início</FormLabel>
-                                                <FormControl>
-                                                    <Popover>
-                                                        <PopoverTrigger asChild>
-                                                            <Button
-                                                                variant="outline"
-                                                                data-empty={!field.value}
-                                                                className="data-[empty=true]:text-date w-[165px] justify-start text-left font-normal"
-                                                            >
-                                                                <CalendarIcon />
-                                                                {field.value ? format(field.value, "dd/MM/yyyy") : <span className="max-md:text-[12px]">Data de início</span>}
-                                                            </Button>
-                                                        </PopoverTrigger>
-                                                        <PopoverContent className="w-auto p-0">
-                                                            <Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))} />
-                                                        </PopoverContent>
-                                                    </Popover>
-                                                </FormControl>
-                                            </FormItem>
-                                        )}
-                                    />
+                            {!isOverdueTask && (
+                                <div className="flex flex-col gap-4">
+                                    <p className="text-[14px] font-medium text-dark-gray">Prazo estimado</p>
+                                    <div className="flex gap-6 max-md:flex-col">
+                                        <FormField
+                                            control={form.control}
+                                            name="startDate"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel className="text-primary text-[11px] font-normal">Início</FormLabel>
+                                                    <FormControl>
+                                                        <Popover>
+                                                            <PopoverTrigger asChild>
+                                                                <Button
+                                                                    variant="outline"
+                                                                    data-empty={!field.value}
+                                                                    className="data-[empty=true]:text-date w-[165px] justify-start text-left font-normal"
+                                                                >
+                                                                    <CalendarIcon />
+                                                                    {field.value ? format(field.value, "dd/MM/yyyy") : <span className="max-md:text-[12px]">Data de início</span>}
+                                                                </Button>
+                                                            </PopoverTrigger>
+                                                            <PopoverContent className="w-auto p-0">
+                                                                <Calendar mode="single" selected={field.value} onSelect={field.onChange} disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))} />
+                                                            </PopoverContent>
+                                                        </Popover>
+                                                    </FormControl>
+                                                </FormItem>
+                                            )}
+                                        />
 
-                                    <FormField
-                                        control={form.control}
-                                        name="dueDate"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel className="text-primary text-[11px] font-normal">Conclusão</FormLabel>
-                                                <FormControl>
-                                                    <Popover>
-                                                        <PopoverTrigger asChild>
-                                                            <Button
-                                                                variant="outline"
-                                                                data-empty={!field.value}
-                                                                className="data-[empty=true]:text-date w-[165px] justify-start text-left font-normal"
-                                                            >
-                                                                <CalendarIcon />
-                                                                {field.value ? format(field.value, "dd/MM/yyyy") : <span className="max-md:text-[12px]">Data de conclusão</span>}
-                                                            </Button>
-                                                        </PopoverTrigger>
-                                                        <PopoverContent className="w-auto p-0">
-                                                            <Calendar mode="single" selected={field.value} disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))} onSelect={(date) => {
-                                                                const startDate = form.getValues("startDate");
-                                                         
-                                                                if (startDate && date && date < startDate) {
-                                                                    const newDate = new Date(startDate);
-                                                                    newDate.setDate(newDate.getDate() + 1);
-                                                                    form.setValue("dueDate", newDate)
+                                        <FormField
+                                            control={form.control}
+                                            name="dueDate"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel className="text-primary text-[11px] font-normal">Conclusão</FormLabel>
+                                                    <FormControl>
+                                                        <Popover>
+                                                            <PopoverTrigger asChild>
+                                                                <Button
+                                                                    variant="outline"
+                                                                    data-empty={!field.value}
+                                                                    className="data-[empty=true]:text-date w-[165px] justify-start text-left font-normal"
+                                                                >
+                                                                    <CalendarIcon />
+                                                                    {field.value ? format(field.value, "dd/MM/yyyy") : <span className="max-md:text-[12px]">Data de conclusão</span>}
+                                                                </Button>
+                                                            </PopoverTrigger>
+                                                            <PopoverContent className="w-auto p-0">
+                                                                <Calendar mode="single" selected={field.value} disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))} onSelect={(date) => {
+                                                                    const startDate = form.getValues("startDate");
+                                                            
+                                                                    if (startDate && date && date < startDate) {
+                                                                        const newDate = new Date(startDate);
+                                                                        newDate.setDate(newDate.getDate() + 1);
+                                                                        form.setValue("dueDate", newDate)
 
-                                                                } else {
-                                                                    field.onChange(date)
-                                                                }
-                                                            }} />
-                                                        </PopoverContent>
-                                                    </Popover>
-                                                </FormControl>
-                                            </FormItem>
-                                        )}
-                                    />
+                                                                    } else {
+                                                                        field.onChange(date)
+                                                                    }
+                                                                }} />
+                                                            </PopoverContent>
+                                                        </Popover>
+                                                    </FormControl>
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
                                 </div>
-                            </div>
+                            )}
 
                             <FormField
                                 control={form.control}

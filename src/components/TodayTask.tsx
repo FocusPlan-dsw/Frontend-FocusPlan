@@ -47,19 +47,6 @@ export function TodayTask() {
     [tasks]
   )
 
-  const isCompletedTaskDue = () => {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-
-        return tasks.filter(task => {
-            if (!task.dueDate) return false;
-                const due = new Date(task.dueDate);
-                due.setHours(0, 0, 0, 0);
-
-            return task.completed && due < today;
-        });
-    };
-
   const completedTask = async (id: string) => {
     try {
       await api.patch(`/tasks/${id}/complete`)
@@ -114,20 +101,9 @@ export function TodayTask() {
             <Task
               key={task.id}
               getTasks={() => Promise.all([getTodayTasks(), getTimeDedicated()])}
-              title={task.title}
               task={task}
               completedTask={completedTask}
-              isCompletedTask={task.completed}
               onClick={() => router.push(`/tasks/${task.id}`)}
-              isOverdueTask={
-                !!(
-                  !task.completed &&
-                  task.dueDate &&
-                  new Date(task.dueDate).setHours(0, 0, 0, 0) <
-                    new Date().setHours(0, 0, 0, 0)
-                )
-              }
-              view={isCompletedTaskDue().includes(task)} 
             />
           ))
         )}
