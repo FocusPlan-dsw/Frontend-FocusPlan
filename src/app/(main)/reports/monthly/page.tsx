@@ -21,7 +21,7 @@ export default function WeeklyReportsPage() {
     "overdueTasks": 0,
     "progressTasks": 0,
     "percentageCompleted": 0,
-    "totalEstimatedTime": "",
+    "totalEstimatedTime": 0,
     "totalTimeDedicated": 0,
   })
 

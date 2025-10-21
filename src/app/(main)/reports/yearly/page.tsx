@@ -16,7 +16,7 @@ interface YearlyReport {
   overdueTasks: number;
   progressTasks: number;
   percentageCompleted: number;
-  totalEstimatedTime: string;
+  totalEstimatedTime: number;
   totalTimeDedicated: number;
 }
 

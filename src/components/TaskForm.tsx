@@ -24,32 +24,31 @@ import { cn } from "@/lib/utils"
 import api from "@/lib/api"
 import { toast } from "react-toastify"
 import { useEffect, useState } from "react"
-import { TaskP } from "@/types/Task"
 import { convertEstimatedTimeToMinutes } from "@/utils/ConvertEstimatedTimeToMinutes"
+import { minutesToHHMM } from "@/utils/ConvertMinutesToHHMM" 
 import { Spin } from "./Spin"
 
 const createTaskSchema = z.object({
   title: z.string().refine((title) => !!title, {
     message: "O titulo da tarefa é obrigatório.",
   }),
-  
   description: z.string().optional(),
-
   startDate: z.optional(z.date()),
-
   dueDate: z.optional(z.date()),
 
   estimatedTime: z.optional(z.string()),
 })
 
+type TaskFormData = z.infer<typeof createTaskSchema>;
+
 interface TaskFormProps {
-  defaultValues?: z.infer<typeof createTaskSchema> & { id?: string }
+  defaultValues?: TaskFormData & { id?: string }
   getTasks?: () => void
   isOverdueTask?: boolean
 }
 
 export function TaskForm({ defaultValues, getTasks, isOverdueTask }: TaskFormProps) {
-      const form = useForm<z.infer<typeof createTaskSchema>>({
+    const form = useForm<TaskFormData>({
         resolver: zodResolver(createTaskSchema),
         defaultValues: {
             title: "",
@@ -70,79 +69,71 @@ export function TaskForm({ defaultValues, getTasks, isOverdueTask }: TaskFormPro
                 startDate: defaultValues.startDate ? new Date(defaultValues.startDate) : undefined,
                 dueDate: defaultValues.dueDate ? new Date(defaultValues.dueDate) : undefined,
             };
-            
             form.reset(valuesToSet);
+        } else {
+            form.reset({
+                title: "",
+                description: "",
+                startDate: undefined,
+                dueDate: undefined,
+                estimatedTime: ""
+            });
         }
-    }, [defaultValues, form]);
+    }, [defaultValues, form, open]);
 
     const maskEstimatedTime = (value: string) => {
-        let v = value.replace(/\D/g, "")
-
+        let v = value.replace(/\D/g, "").slice(0, 4)
         if (v.length >= 3) {
-            v = v.slice(0, 4)
             v = v.slice(0, 2) + ":" + v.slice(2)
         }
-
         return v
     }  
 
-    const createTask = async (data: TaskP) => {
+    const createTask = async (data: TaskFormData) => {
+        setLoading(true);
         try {
             await api.post("/tasks", {
                 title: data.title,
                 description: data.description ?? "Sem descrição",
-                startDate: data.startDate ? new Date(data.startDate) : undefined,
-                dueDate: data.dueDate ? new Date(data.dueDate) : undefined, 
+                startDate: data.startDate,
+                dueDate: data.dueDate,
                 estimatedTime: convertEstimatedTimeToMinutes(data.estimatedTime ?? "00:00"),
             })
-
             setOpen(false);
             toast.success('Tarefa criada com sucesso!')
-
-            if (getTasks) {
-                getTasks();
-            }
-
+            if (getTasks) getTasks();
         } catch (error) {
             console.log(error)
             toast.error('Erro ao criar tarefa!')
-
         } finally {
             setLoading(false);
         }
     }
 
-    const updateTask = async (data: TaskP & { id: string }) => {
+    const updateTask = async (data: TaskFormData & { id: string }) => {
+        setLoading(true);
         try {
             await api.put(`/tasks/${data.id}`, {
                 title: data.title,
                 description: data.description ?? "Sem descrição",
-                startDate: data.startDate ? new Date(data.startDate) : undefined,
-                dueDate: data.dueDate ? new Date(data.dueDate) : undefined, 
+                startDate: data.startDate,
+                dueDate: data.dueDate,
                 estimatedTime: convertEstimatedTimeToMinutes(data.estimatedTime ?? "00:00"),
             })
-
             setOpen(false);
             toast.success('Tarefa atualizada com sucesso!')
-
-            if (getTasks) {
-                getTasks();
-            }
-    
-            } catch (error) {
-                console.log(error)
-                toast.error('Erro ao atualizar tarefa!')
-
-            } finally {
-                setLoading(false);
-            }
+            if (getTasks) getTasks();
+        } catch (error) {
+            console.log(error)
+            toast.error('Erro ao atualizar tarefa!')
+        } finally {
+            setLoading(false);
+        }
     }
 
-    const onSubmit = (data: z.infer<typeof createTaskSchema>) => {
-        setLoading(true);
-
-        if (defaultValues) {
-            updateTask({ ...data, id: defaultValues.id! });
+    const onSubmit = (data: TaskFormData) => {
+        if (defaultValues?.id) {
+            updateTask({ ...data, id: defaultValues.id });
         } else {
             createTask(data);
         }
@@ -167,6 +158,7 @@ export function TaskForm({ defaultValues, getTasks, isOverdueTask }: TaskFormPro
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="px-5">
                         <div className="w-full flex flex-col gap-[2rem]">
+                            
                             <FormField
                                 control={form.control}
                                 name="title"
@@ -205,6 +197,7 @@ export function TaskForm({ defaultValues, getTasks, isOverdueTask }: TaskFormPro
                                 <div className="flex flex-col gap-4">
                                     <p className="text-[14px] font-medium text-dark-gray">Prazo estimado</p>
                                     <div className="flex gap-6 max-md:flex-col">
+                                        
                                         <FormField
                                             control={form.control}
                                             name="startDate"
@@ -226,12 +219,10 @@ export function TaskForm({ defaultValues, getTasks, isOverdueTask }: TaskFormPro
                                                             <PopoverContent className="w-auto p-0">
                                                                 <Calendar mode="single" selected={field.value} disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))} onSelect={(date) => {
                                                                     const dueDate = form.getValues("dueDate");
-                                                            
                                                                     if (dueDate && date && date > dueDate) {
                                                                         const newDate = new Date(dueDate);
                                                                         newDate.setDate(newDate.getDate() - 1);
                                                                         form.setValue("startDate", newDate)
-
                                                                     } else {
                                                                         field.onChange(date)
                                                                     }
@@ -264,12 +255,10 @@ export function TaskForm({ defaultValues, getTasks, isOverdueTask }: TaskFormPro
                                                             <PopoverContent className="w-auto p-0">
                                                                 <Calendar mode="single" selected={field.value} disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))} onSelect={(date) => {
                                                                     const startDate = form.getValues("startDate");
-                                                            
                                                                     if (startDate && date && date < startDate) {
                                                                         const newDate = new Date(startDate);
                                                                         newDate.setDate(newDate.getDate() + 1);
                                                                         form.setValue("dueDate", newDate)
-
                                                                     } else {
                                                                         field.onChange(date)
                                                                     }
@@ -288,41 +277,27 @@ export function TaskForm({ defaultValues, getTasks, isOverdueTask }: TaskFormPro
                                 control={form.control}
                                 name="estimatedTime"
                                 render={({ field }) => {
-                                    const formatTime = (value: string | number) => {
-                                        let totalMinutes = 0;
-                                        
-                                        if (typeof value === "string") {
-                                            const [h, m] = value.split(":");
-                                            
-                                            const hours = Number(h) || 0;
-                                            const minutes = Number(m) || 0;
-
-                                            totalMinutes = hours * 60 + minutes;
-
-                                        } else {
-                                            totalMinutes = value || 0;
-                                        }
-                                        
-                                        const hours = value ? Math.floor(totalMinutes / 60) : 0;
-                                        const minutes = value ?totalMinutes % 60 : 0;
-
-                                        return { hours: `${hours.toString().padStart(2, "0")}h`, minutes: `${minutes.toString().padStart(2, "0")}min` };
-                                    }
-                                    
-                                    const time = formatTime(field.value ?? 0);
+                                    const totalMinutes = convertEstimatedTimeToMinutes(field.value);
 
                                     return (
                                         <FormItem>
                                             <FormLabel htmlFor="estimatedTime" className="text-[14px] font-medium">Tempo estimado</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="Tempo estimado para tarefa" id="estimatedTime" type="text" className="border-gray04 rounded-[6px]" {...form.register("estimatedTime", { 
-                                                    onChange: (e) => {
+                                                <Input 
+                                                    placeholder="00:00" 
+                                                    id="estimatedTime" 
+                                                    type="text" 
+                                                    className="border-gray04 rounded-[6px]" 
+                                                    {...field}
+                                                    onChange={(e) => {
                                                         const masked = maskEstimatedTime(e.target.value)
-                                                        form.setValue("estimatedTime", masked)
-                                                    }
-                                                })} />
+                                                        field.onChange(masked)
+                                                    }}
+                                                />
                                             </FormControl>
-                                            <p className="text-primary text-[11px]">{time.hours} {time.minutes}</p>
+                                            <p className="text-primary text-[11px]">
+                                                Equivale a: {minutesToHHMM(totalMinutes)}
+                                            </p>
                                         </FormItem>
                                     )
                                 }}
