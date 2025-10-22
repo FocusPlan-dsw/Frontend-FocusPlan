@@ -102,7 +102,7 @@ export default function Register() {
                 <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col w-full justify-center items-center gap-[4rem] max-lg:p-5">
                     <h1 className="font-bold text-[2.5rem] text-primary max-lg:text-[1.5rem]">Criar uma conta</h1>
 
-                    <div className="w-full flex flex-col gap-[2rem] max-w-[531px]">
+                    <div className="w-full flex flex-col gap-[1.5rem] max-w-[531px]">
                         <FormField
                             control={form.control}
                             name="fullName"
@@ -159,8 +159,7 @@ export default function Register() {
                             )}
                         />
 
-
-                        <p className="text-dark-gray font-light text-[1rem] self-end max-lg:text-[0.75rem]">Já tem uma conta? <Link href="/login" className="text-link underline hover:opacity-80">Faça login</Link></p>
+                        <p className="text-dark-gray font-light text-[0.9rem] self-end max-lg:text-[0.75rem]">Já tem uma conta? <Link href="/login" className="text-link underline hover:opacity-80">Faça login</Link></p>
 
                         <Button disabled={loading}>{loading ? <Spin /> : "Criar conta"}</Button>
                     </div>

@@ -79,7 +79,7 @@ export default function Login() {
                     
                     <div className="w-full flex flex-col items-center gap-8 max-w-[531px]">
                         
-                        <div className="w-full flex flex-col gap-[3.125rem]">
+                        <div className="w-full flex flex-col gap-[2.5rem]">
                             <FormField
                                 control={form.control}
                                 name="email"
@@ -113,7 +113,7 @@ export default function Login() {
 
                             <Button disabled={loading}>{loading ? <Spin /> : "Entrar"}</Button>
 
-                            <p className="text-dark-gray font-light text-[1rem] self-end max-lg:text-[0.75rem]">Não tem uma conta? <Link href="/register" className="text-link underline hover:opacity-80">Crie uma conta</Link></p>
+                            <p className="text-dark-gray font-light text-[0.9rem] self-end max-lg:text-[0.75rem]">Não tem uma conta? <Link href="/register" className="text-link underline hover:opacity-80">Crie uma conta</Link></p>
                         </div>
                     </div>
                 </form>

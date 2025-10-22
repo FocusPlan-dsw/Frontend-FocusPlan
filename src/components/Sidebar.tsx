@@ -47,26 +47,28 @@ export function Sidebar({ activeStep, onStepChange }: SidebarProps) {
             >
                 <Image src="/sidebar.svg" alt="sidebar" width={210} height={75} className="mx-auto max-md:pt-10" priority />
 
-                <ul className="flex flex-col gap-[1.5rem] h-full">
-                    {buttons.map((button) => {
-                        const isActive = activeStep === button.step;
+                <ul className="flex flex-col gap-[3rem] h-full">
+                    <div className="flex flex-col gap-[0.8rem]">
+                        {buttons.map((button) => {
+                            const isActive = activeStep === button.step;
 
-                        return (
-                            <li key={button.name}>
-                                <button
-                                    className={`w-full px-8 py-2 flex gap-3 text-xl text-white items-center cursor-pointer 
-                                    ${isActive ? "bg-light-gray/40" : ""} hover:opacity-80`}
-                                    onClick={() => handleNavigation(button)}
-                                >
-                                    <button.icon /> {button.name}
-                                </button>
-                            </li>
-                        );
-                    })}
+                            return (
+                                <li key={button.name}>
+                                    <button
+                                        className={`w-full px-8 py-2 flex gap-3 text-lg text-white items-center cursor-pointer 
+                                        ${isActive ? "bg-light-gray/40" : ""} hover:opacity-80`}
+                                        onClick={() => handleNavigation(button)}
+                                    >
+                                        <button.icon /> {button.name}
+                                    </button>
+                                </li>
+                            );
+                        })}
+                    </div>
 
                     <li>
                         <button
-                            className="w-full px-8 py-2 flex gap-3 text-xl text-white items-center cursor-pointer hover:opacity-80"
+                            className="w-full px-8 py-2 flex gap-3 text-lg text-white items-center cursor-pointer hover:opacity-80"
                             onClick={handleLogout}
                         >
                             <LogOut /> Sair

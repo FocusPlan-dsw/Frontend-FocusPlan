@@ -6,14 +6,16 @@ import api from "@/lib/api";
 import { toast } from "react-toastify";
 import { Spin } from "./Spin";
 import { SidePanel } from "./SidePanel";
+import { BackButton } from "./BackButton";
 
 interface EnterCodeProps {
     email: string;
     onCodeVerified: () => void;
     onCodeEntered: (code: string) => void;
+    onBack?: () => void
 }
 
-export function EnterCode( { email, onCodeVerified, onCodeEntered }: EnterCodeProps ) {
+export function EnterCode({ email, onCodeVerified, onCodeEntered, onBack }: EnterCodeProps) {
     const [loading, setLoading] = useState(false);
 
     const [code, setCode] = useState('');
@@ -71,7 +73,11 @@ export function EnterCode( { email, onCodeVerified, onCodeEntered }: EnterCodePr
         <section className="w-full flex max-xl:flex-col">
             <SidePanel />
 
-            <div className="flex flex-col w-full justify-center items-center gap-[6.25rem] max-lg:p-5">
+            <div className="max-w-[531px] mx-auto flex flex-col w-full justify-center items-center gap-[6.25rem] max-lg:p-5">
+                <div className="self-start">
+                    <BackButton onBack={onBack} />
+                </div>
+
                 <h2 className="font-bold text-[2.5rem] text-primary max-lg:text-[1.5rem]">Esqueci minha senha</h2>
                 <Label htmlFor="code">Insira o código enviado para {email}</Label>
                 

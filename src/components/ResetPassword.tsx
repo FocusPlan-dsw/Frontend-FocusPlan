@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Spin } from "./Spin";
+import { BackButton } from "./BackButton";
 
 const resetPasswordSchema = z.object({
   password: z
@@ -25,9 +26,10 @@ const resetPasswordSchema = z.object({
 
 interface ResetPasswordProps {
     code: string
+    onBack?: () => void
 }
 
-export default function ResetPassword({ code }: ResetPasswordProps) {
+export default function ResetPassword({ code, onBack }: ResetPasswordProps) {
     const [loading, setLoading] = useState(false);
 
     const router = useRouter();
@@ -71,7 +73,10 @@ export default function ResetPassword({ code }: ResetPasswordProps) {
             <SidePanel />
 
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col w-full justify-center items-center gap-[6.25rem] max-lg:p-5">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-[531px] mx-auto flex flex-col w-full justify-center items-center gap-[6.25rem] max-lg:p-5">
+                    <div className="self-start">
+                        <BackButton onBack={onBack} />
+                    </div>
                     <h1 className="font-bold text-[2.5rem] text-primary max-lg:text-[1.5rem]">Esqueci minha senha</h1>
                     
                     <div className="w-full flex flex-col gap-[3.125rem] max-w-[531px]">
