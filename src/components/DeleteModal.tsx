@@ -49,7 +49,7 @@ export function DeleteModal({ id, getTasks, setOpenModalCancel }: DeleteModalPro
 
                 <div className="grid grid-flow-col grid-cols-2 gap-[19px] mt-[60px]">
                     <Button size="lg" onClick={() => deleteTask(id)}>Deletar</Button>
-                    <Button size="lg" className="bg-white text-primary border border-primary" onClick={() => setOpenModalCancel(false)}>Cancelar</Button>
+                    <Button size="lg" className="bg-white text-primary border border-primary hover:opacity-80 hover:bg-white" onClick={() => setOpenModalCancel(false)}>Cancelar</Button>
                 </div>
             </div>
         </div>
