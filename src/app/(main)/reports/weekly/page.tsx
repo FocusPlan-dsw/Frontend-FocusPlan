@@ -4,7 +4,7 @@ import { useStep } from "@/context/StepContext";
 import { useEffect, useState } from "react";
 import { BackButton } from "@/components/BackButton";
 import { InformationBlockReports } from "@/components/InformationBlockReports";
-import { Clock10 } from "lucide-react";
+import { Clock10, TriangleAlert } from "lucide-react";
 import { formatSeconds } from "@/utils/FormatSeconds";
 import { minutesToHHMM } from "@/utils/ConvertMinutesToHHMM";
 import { formatDate } from "@/utils/FormatDate";
@@ -21,6 +21,7 @@ export default function WeeklyReportsPage() {
     "completedTasks": 0,
     "overdueTasks": 0,
     "progressTasks": 0,
+    "completedLateTasks": 0,
     "percentageCompleted": 0,
     "totalEstimatedTime": 0,
     "totalTimeDedicated": 0,
@@ -74,13 +75,14 @@ export default function WeeklyReportsPage() {
               </SelectContent>
             </Select>
             <p>Na semana de {formatDate(displayedPeriod?.start)} a {formatDate(displayedPeriod?.end)} o seu planejamento e horas líquidas de estudo foram coletados e você obteve os seguintes resultados:</p>
-            <div className="flex flex-wrap gap-x-5 gap-y-10 w-full max-w-[1200px] mx-auto mb-15 items-start">
+            <div className="flex flex-wrap justify-center gap-x-5 gap-y-10 w-full max-w-[1200px] mx-auto mb-15 items-start">
               <InformationBlockReports quantity={minutesToHHMM(report.totalEstimatedTime)} value="Tempo total estimado" icon={Clock10}/>
                 <InformationBlockReports quantity={formatSeconds(report.totalTimeDedicated)} value="Tempo total percorrido" icon={Clock10}/>
                 <InformationBlockReports quantity={`${report.percentageCompleted}%`} value="Tarefas Concluídas"/>
                 <InformationBlockReports quantity={report.totalTasks} value="Tarefas Planejadas"/>
                 <InformationBlockReports quantity={report.completedTasks} value="Tarefas Concluídas"/>
                 <InformationBlockReports quantity={report.overdueTasks} value="Tarefas Não Concluídas"/>
+                <InformationBlockReports quantity={report.completedLateTasks} value="Tarefas Concluídas com Atraso" icon={TriangleAlert} />
             </div>
           </main>
       </div>
