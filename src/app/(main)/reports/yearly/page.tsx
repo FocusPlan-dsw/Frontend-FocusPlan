@@ -4,7 +4,7 @@ import { useStep } from "@/context/StepContext";
 import { useEffect, useState } from "react";
 import { BackButton } from "@/components/BackButton";
 import { InformationBlockReports } from "@/components/InformationBlockReports";
-import { Clock10 } from "lucide-react";
+import { Clock10, TriangleAlert } from "lucide-react";
 import { formatSeconds } from "@/utils/FormatSeconds";
 import { minutesToHHMM } from "@/utils/ConvertMinutesToHHMM";
 import api from "@/lib/api";
@@ -15,6 +15,7 @@ interface YearlyReport {
   completedTasks: number;
   overdueTasks: number;
   progressTasks: number;
+  completedLateTasks: number,
   percentageCompleted: number;
   totalEstimatedTime: number;
   totalTimeDedicated: number;
@@ -99,13 +100,14 @@ export default function YearlyReportsPage() {
           <p>Durante o ano de {selectedYear || "..."} o seu planejamento e horas líquidas de estudo foram coletados e você obteve os seguintes resultados:</p>
           
           {report ? (
-            <div className="flex flex-wrap gap-x-5 gap-y-10 w-full max-w-[1200px] mx-auto mb-15 items-start">
+            <div className="flex flex-wrap justify-center gap-x-5 gap-y-10 w-full max-w-[1200px] mx-auto mb-15 items-start">
               <InformationBlockReports quantity={minutesToHHMM(report.totalEstimatedTime)} value="Tempo total estimado" icon={Clock10}/>
               <InformationBlockReports quantity={formatSeconds(report.totalTimeDedicated)} value="Tempo total percorrido" icon={Clock10}/>
               <InformationBlockReports quantity={`${report.percentageCompleted}%`} value="Tarefas Concluídas"/>
               <InformationBlockReports quantity={report.totalTasks} value="Tarefas Planejadas"/>
               <InformationBlockReports quantity={report.completedTasks} value="Tarefas Concluídas"/>
               <InformationBlockReports quantity={report.overdueTasks} value="Tarefas Não Concluídas"/>
+              <InformationBlockReports quantity={report.completedLateTasks} value="Tarefas Concluídas com Atraso" icon={TriangleAlert} />
             </div>
           ) : (
             <p>Carregando dados do relatório...</p>
