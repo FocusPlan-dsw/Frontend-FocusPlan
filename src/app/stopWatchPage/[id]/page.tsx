@@ -200,7 +200,7 @@ export default function StopWatchPage() {
                                   <RadioGroup value={selectedModeInDialog} onValueChange={(value: string) => setSelectedModeInDialog(value as TimerMode)} className="py-4 space-y-4">
                                       <div className="flex items-center space-x-2">
                                           <RadioGroupItem value="pomodoro" id="pomodoro" />
-                                          <Label htmlFor="pomodoro">Pomodoro com contagem regressiva (de 25:00 até o fim do timer)</Label>
+                                          <Label htmlFor="pomodoro">Pomodoro com contagem regressiva (do tempo de foco até o fim do timer)</Label>
                                       </div>
                                       <div className="flex items-center space-x-2">
                                           <RadioGroupItem value="stopwatch" id="stopwatch" />
