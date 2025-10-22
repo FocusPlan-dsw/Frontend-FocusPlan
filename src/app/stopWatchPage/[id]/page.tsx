@@ -82,6 +82,19 @@ export default function StopWatchPage() {
         }
     }, [id]);
 
+    const handleStartPerformance = async () => {
+        if (!id || !task) return;
+        
+        if (task.performanceDate) return;
+
+        try {
+            await api.patch(`/tasks/${id}/start-performance`);
+            setTask(prevTask => prevTask ? { ...prevTask, performanceDate: new Date() } : null);
+        } catch (error) {
+            console.error("Erro ao iniciar performance:", error);
+        }
+    };
+
     const handleTimeSubmit = async (elapsedSeconds: number) => {
         if (!id || elapsedSeconds <= 0) return;
         
@@ -122,7 +135,12 @@ export default function StopWatchPage() {
             setPomodoroState('idle');
         }
     };
-    const handleStartFocus = () => setPomodoroState('focusing');
+    
+    const handleStartFocus = () => {
+        handleStartPerformance();
+        setPomodoroState('focusing');
+    };
+    
     const handleStartBreak = () => setPomodoroState('break');
     const handleSkipBreak = () => setPomodoroState('idle');
 
@@ -152,7 +170,7 @@ export default function StopWatchPage() {
 
                 <div className="flex flex-col items-center gap-8 md:gap-12 w-full">
                     {timerMode === 'stopwatch' 
-                        ? <Chronometer onTimeSubmit={handleTimeSubmit} /> 
+                        ? <Chronometer onTimeSubmit={handleTimeSubmit} onStart={handleStartPerformance} /> 
                         : <PomodoroTimer
                             key={`${pomodoroState}-${focusTime}-${breakTime}`}
                             pomodoroState={pomodoroState}

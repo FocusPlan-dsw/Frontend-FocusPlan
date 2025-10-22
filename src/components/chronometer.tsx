@@ -5,9 +5,10 @@ import { TimerDisplay } from './TimerDisplay';
 
 interface ChronometerProps {
     onTimeSubmit: (elapsedSeconds: number) => void;
+    onStart?: () => void;
 }
 
-export function Chronometer({ onTimeSubmit }: ChronometerProps) {
+export function Chronometer({ onTimeSubmit, onStart }: ChronometerProps) {
     const {
         seconds,
         minutes,
@@ -21,6 +22,11 @@ export function Chronometer({ onTimeSubmit }: ChronometerProps) {
     const isPaused = !isRunning && (minutes > 0 || seconds > 0);
 
     const totalMinutes = (hours * 60) + minutes;
+
+    const handleStart = () => {
+        onStart?.();
+        start();
+    };
 
     const handleReset = () => {
         const elapsedSeconds = (totalMinutes * 60) + seconds;
@@ -38,7 +44,7 @@ export function Chronometer({ onTimeSubmit }: ChronometerProps) {
             seconds={seconds}
             isRunning={isRunning}
             isPaused={isPaused}
-            onStart={start}
+            onStart={handleStart}
             onPause={pause}
             onResume={start}
             onReset={handleReset}
