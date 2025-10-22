@@ -9,8 +9,10 @@ export type TaskP = {
 export type TaskCompleted = TaskP & {
   id: string;
   completed: boolean;
+  completedAt?: Date;
+  performanceDate?: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
   estimatedTime?: number;
-  actualStartDate?: Date;
-  actualEndDate?: Date; 
   timeDedicated?: number;
 };

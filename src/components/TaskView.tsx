@@ -5,13 +5,13 @@ import { TaskViewCard } from "./TaskViewCard";
 export function TaskView({ 
   title, 
   description, 
-  completed, 
-  estimatedTime, 
   startDate, 
   dueDate,
-  actualStartDate,
-  actualEndDate,
-  timeDedicated
+  estimatedTime,
+  timeDedicated,
+  completed, 
+  completedAt,
+  performanceDate
 }: TaskCompleted) {
   
   const getTaskStatus = (completed: boolean, dueDate?: Date) => {
@@ -62,8 +62,8 @@ export function TaskView({
         title="Execução" 
         icon={Clock}
         type="executed"
-        actualStartDate={actualStartDate}
-        actualEndDate={actualEndDate}
+        performanceDate={performanceDate}
+        completedAt={completedAt}
         timeDedicated={timeDedicated}
       />
     </section>

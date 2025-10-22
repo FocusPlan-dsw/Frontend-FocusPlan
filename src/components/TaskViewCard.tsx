@@ -8,8 +8,8 @@ interface TaskViewCardProps {
   timeDedicated?: number;
   startDate?: Date | string | number;
   dueDate?: Date | string | number;
-  actualStartDate?: Date | string | number;
-  actualEndDate?: Date | string | number;
+  performanceDate?: Date | string | number;
+  completedAt?: Date | string | number;
   type: 'planned' | 'executed';
 }
 
@@ -31,15 +31,15 @@ export function TaskViewCard({
   timeDedicated,
   startDate,
   dueDate,
-  actualStartDate,
-  actualEndDate,
+  performanceDate,
+  completedAt,
   type,
 }: TaskViewCardProps) {
   
   const IconComponent = icon;
   
-  const startDateFormatted = formatDate(type === 'planned' ? startDate : actualStartDate);
-  const dueDateFormatted = formatDate(type === 'planned' ? dueDate : actualEndDate);
+  const startDateFormatted = formatDate(type === 'planned' ? startDate : performanceDate);
+  const dueDateFormatted = formatDate(type === 'planned' ? dueDate : completedAt);
   
   let formattedTimeValue: string; 
 
