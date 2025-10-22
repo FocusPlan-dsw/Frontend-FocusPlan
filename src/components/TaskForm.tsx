@@ -27,6 +27,7 @@ import { useEffect, useState } from "react"
 import { convertEstimatedTimeToMinutes } from "@/utils/ConvertEstimatedTimeToMinutes"
 import { minutesToHHMM } from "@/utils/ConvertMinutesToHHMM" 
 import { Spin } from "./Spin"
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip"
 
 const createTaskSchema = z.object({
   title: z.string().refine((title) => !!title, {
@@ -141,15 +142,26 @@ export function TaskForm({ defaultValues, getTasks, isOverdueTask }: TaskFormPro
 
     return (
         <Sheet open={open} onOpenChange={setOpen}>
-            <SheetTrigger asChild>
-                {
-                    defaultValues ? (
-                        <button title="Editar" type="button" className="cursor-pointer"><Pen className="w-4 h-4" /></button>
-                    ) : (
-                        <button title="Criar tarefa" className="flex items-center justify-center text-primary bg-gray01 border-[0.5px] border-gray02 rounded-[9px] w-[60px] h-[48px] cursor-pointer hover:opacity-80"><Plus size={18} /></button>
-                    )
-                }
-            </SheetTrigger>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <SheetTrigger asChild>
+                        {
+                            defaultValues ? (
+                                <button type="button" className="flex items-center justify-center cursor-pointer rounded-[5px] w-[40px] h-[33px] hover:border-[0.5px] hover:border-shadowTitle transition-all">
+                                    <Pen className="w-4 h-4" />
+                                </button>
+                            ) : (
+                                <button className="flex items-center justify-center text-primary bg-gray01 border-[0.5px] border-gray02 rounded-[9px] w-[60px] h-[48px] cursor-pointer hover:opacity-80">
+                                    <Plus size={18} />
+                                </button>
+                            )
+                        }
+                    </SheetTrigger>
+                </TooltipTrigger>
+                <TooltipContent>
+                    <p>{defaultValues ? "Editar tarefa" : "Criar tarefa"}</p>
+                </TooltipContent>
+            </Tooltip>
             <SheetContent className="overflow-y-auto overflow-x-hidden max-[1025px]:pb-10">
                 <SheetHeader>
                     <SheetTitle>{defaultValues ? "Editar tarefa" : "Criar nova tarefa"}</SheetTitle>

@@ -5,6 +5,7 @@ import { DeleteModal } from "./DeleteModal";
 import { TaskCompleted } from "@/types/Task";
 import { minutesToHHMM } from "@/utils/ConvertMinutesToHHMM";
 import Link from "next/link";
+import { Tooltip,TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 interface TaskProps {
     task: TaskCompleted
@@ -45,21 +46,38 @@ export function Task({ task, getTasks, completedTask }: TaskProps) {
                     </Link>
 
                     <Link className="cursor-pointer" href={`/tasks/${task.id}`}>
-                        <p className="text-dark-gray text-lg font-normal break-words hover:underline">{task.title}</p>
+                        <p className="text-dark-gray text-lg font-normal break-words hover:underline max-md:text-[15px] max-md:truncate max-md:block max-md:max-w-[8rem]">{task.title}</p>
                     </Link>
                 </div>
 
-                
-                <div className="flex items-center justify-center gap-5">
-                    <button onClick={() => completedTask && completedTask(task.id)} title={task.completed ? "Desmarcar como concluída" : "Marcar como concluída"} type="button" className="cursor-pointer"><Check className="w-5 h-5" /></button>
+                <div className="flex items-center justify-center gap-1">
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <button onClick={() => completedTask && completedTask(task.id)} type="button" className="flex items-center justify-center cursor-pointer rounded-[5px] w-[40px] h-[33px] hover:border-[0.5px] hover:border-shadowTitle transition-all">
+                                <Check className="w-5 h-5" />
+                            </button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>{task.completed ? "Desmarcar como concluída" : "Marcar como concluída"}</p>
+                        </TooltipContent>
+                    </Tooltip>
                     
                     <TaskForm defaultValues={{ ...task, estimatedTime: task?.estimatedTime ? minutesToHHMM(task.estimatedTime) : "00:00" }} getTasks={getTasks} isOverdueTask={isOverdue} />
                     
                     {
                         !isOverdue && (
-                            <button title="Excluir" type="button" className="cursor-pointer" onClick={() => setOpenModalCancel(true)}><Trash2 className="w-4 h-4" /></button>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <button type="button" className="flex items-center justify-center cursor-pointer rounded-[5px] w-[40px] h-[33px] hover:border-[0.5px] hover:border-shadowTitle transition-all" onClick={() => setOpenModalCancel(true)}>
+                                        <Trash2 className="w-4 h-4" />
+                                    </button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>Excluir</p>
+                                </TooltipContent>
+                            </Tooltip>
                         )
-                    }
+                    } 
                 </div>
                   
             </div>
